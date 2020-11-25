@@ -16,8 +16,8 @@
                 return $data;
             }
 
-            $username = $firstname = $lastname = $email = $passwd = $passwdconfirm = '';
-            $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwdErr = $passwdconfirmErr = '';
+            $username = $firstname = $lastname = $email = $password = $passwordconfirm = '';
+            $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwordErr = $passwordconfirmErr = '';
 
             // check incoming request method. 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -29,10 +29,10 @@
                     ? $lastnameErr = 'required' : $lastname = clean_input($_POST['lastname']);
                 empty($_POST['email']) 
                     ? $emailErr = 'required' : $email = clean_input($_POST['email']);
-                empty($_POST['passwd']) 
-                    ? $passwdErr = 'required' : $passwd = clean_input($_POST['passwd']);
-                empty($_POST['passwdconfirm']) 
-                    ? $passwdconfirmErr = 'required' : $passwdconfirm = clean_input($_POST['passwdconfirm']);
+                empty($_POST['password']) 
+                    ? $passwordErr = 'required' : $password = clean_input($_POST['password']);
+                empty($_POST['passwordconfirm']) 
+                    ? $passwordconfirmErr = 'required' : $passwordconfirm = clean_input($_POST['passwordconfirm']);
             }
         ?>
         <div class="container-fluid header">
@@ -50,9 +50,10 @@
                             <span class="error">* <?php echo $usernameErr; ?></span>
                             <span><em id="usernameHint" style="font-size: 14px;"></em></span>
                             <!-- use 'shadow-none' class to remove bright blue glow outline on focused input fields -->
-                            <input type="text" class="form-control shadow-none" 
+                            <input type="text" id="usernameField" class="form-control shadow-none" 
                                 placeholder="Enter username" name="username" onkeyup="verifyUsername(this.value, event)" 
-                                onkeydown="verifyUsername(this.value, event)" onkeypress="filterKey(event)">
+                                onkeydown="verifyUsername(this.value, event)" onkeypress="filterKey(event)"
+                                data-placement="left" data-trigger="keyup" title="Must be at least 6 characters">
                             <div class="valid-feedback">Valid username.</div>
                             <div class="invalid-feedback">Username not available.</div>
                         </div>
@@ -78,14 +79,16 @@
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
-                            <label for="passwd"><b>Password</b></label>
-                            <span class="error">* <?php echo $passwdErr; ?></span>
-                            <input type="password" class="form-control shadow-none" placeholder="Enter password" name="passwd">
+                            <label for="password"><b>Password</b></label>
+                            <span class="error">* <?php echo $passwordErr; ?></span>
+                            <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" name="password" 
+                                onkeyup="verifyPassword(this.value, event)" onkeydown="verifyPassword(this.value, event)" 
+                                data-placement="left" data-trigger="keyup" title="Must be at least 8 characters">
                         </div>
                         <div class="col-6 form-group">
-                            <label for="passwdconfirm"><b>Confirm Password</b></label>
+                            <label for="passwordconfirm"><b>Confirm Password</b></label>
                             <span class="error">*</span>
-                            <input type="password" class="form-control shadow-none" placeholder="Confirm password" name="passwdconfirm">
+                            <input type="password" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm">
                         </div>
                     </div>
                     <div class="row">
@@ -99,9 +102,9 @@
         <div class="footer">
 
         </div>
-        <script src="js/signup.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="js/signup.js"></script>
     </body>
 </html>
