@@ -16,23 +16,97 @@
                 return $data;
             }
 
+            function submit_form_data() {
+                // TESTING STATEMENT
+                echo "<script>alert('form data submitted successfully!');</script>";
+            }
             $username = $firstname = $lastname = $email = $password = $passwordconfirm = '';
             $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwordErr = $passwordconfirmErr = '';
 
             // check incoming request method. 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                empty($_POST['username']) 
-                    ? $usernameErr = 'required' : $username = clean_input($_POST['username']);
-                empty($_POST['firstname']) 
-                    ? $firstnameErr = 'required' : $firstname = clean_input($_POST['firstname']);
-                empty($_POST['lastname']) 
-                    ? $lastnameErr = 'required' : $lastname = clean_input($_POST['lastname']);
-                empty($_POST['email']) 
-                    ? $emailErr = 'required' : $email = clean_input($_POST['email']);
-                empty($_POST['password']) 
-                    ? $passwordErr = 'required' : $password = clean_input($_POST['password']);
-                empty($_POST['passwordconfirm']) 
-                    ? $passwordconfirmErr = 'required' : $passwordconfirm = clean_input($_POST['passwordconfirm']);
+
+                $submitFormData = true;
+                // validate username
+                if (empty($_POST['username'])) {
+                    $usernameErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $username = clean_input($_POST['username']);
+                    if (strlen($username) < 6) {
+                        $usernameErr = 'must be at least 6 characters';
+                        $submitFormData = false;
+                    }
+                    if (!preg_match("/^[0-9a-zA-Z_]*$/", $username)) {
+                        $usernameErr = "characters must be alphanumeric or '_'";
+                        $username = '';
+                        $submitFormData = false;
+                    }
+                }
+                // validate first name
+                if (empty($_POST['firstname'])) {
+                    $firstnameErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $firstname = clean_input($_POST['firstname']);
+                    if (!preg_match("/^[a-zA-Z-']*$/", $firstname)) {
+                        $firstnameErr = 'Invalid input';
+                        $firstname = '';
+                        $submitFormData = false;
+                    }
+                }
+                // validate last name
+                if (empty($_POST['lastname'])) {
+                    $lastnameErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $lastname = clean_input($_POST['lastname']);
+                    if (!preg_match("/^[a-zA-Z-']*$/", $lastname)) {
+                        $lastnameErr = 'Invalid input';
+                        $lastname = '';
+                        $submitFormData = false;
+                    }
+                }
+                // validate email
+                if (empty($_POST['email'])) {
+                    $emailErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $email = clean_input($_POST['email']);
+                    if (!preg_match("/^[a-zA-Z0-9!#$%&'*+-\/=?^_`{|}~;]+[@][a-zA-Z0-9-]+[.][a-zA-Z]+$/", $email)) {
+                        $emailErr = 'Invalid email address';
+                        $email = '';
+                        $submitFormData = false;
+                    }
+                }
+                // validate password
+                if (empty($_POST['password'])) {
+                    $passwordErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $password = clean_input($_POST['password']);
+                    if (strlen($password) < 8) {
+                        $passwordErr = 'Password is too short';
+                        $password = '';
+                        $submitFormData = false;
+                    }
+                }
+                // confirm password
+                if (empty($_POST['passwordconfirm'])) {
+                    $passwordconfirmErr = 'required';
+                    $submitFormData = false;
+                } else { 
+                    $passwordconfirm = clean_input($_POST['passwordconfirm']);
+                    if ($password != $passwordconfirm) {
+                        $passwordconfirmErr = 'Passwords do not match';
+                        $passwordconfirm = '';
+                        $submitFormData = false;
+                    }
+                }
+                if ($submitFormData == true) {
+                    // if this point is reached, go ahead and submit the form data
+                    submit_form_data();
+                }
             }
         ?>
         <div class="container-fluid header">
@@ -50,9 +124,9 @@
                             <span class="error">* <?php echo $usernameErr; ?></span>
                             <span><em id="usernameHint" style="font-size: 14px;"></em></span>
                             <!-- use 'shadow-none' class to remove bright blue glow outline on focused input fields -->
-                            <input type="text" id="usernameField" class="form-control shadow-none" 
+                            <input type="text" id="usernameField" class="form-control shadow-none" value="<?php echo $username;?>"
                                 placeholder="Enter username" name="username" onkeyup="verifyUsername(this.value, event)" 
-                                onkeydown="verifyUsername(this.value, event)" onkeypress="filterKey(event)"
+                                onkeydown="verifyUsername(this.value, event)" onkeypress="filterKey(this.id, event)"
                                 data-placement="left" data-trigger="keyup" title="Must be at least 6 characters">
                             <div class="valid-feedback">Valid username.</div>
                             <div class="invalid-feedback">Username not available.</div>
@@ -62,38 +136,41 @@
                         <div class="col-6 form-group">
                             <label for="firstname"><b>First Name</b></label>
                             <span class="error">* <?php echo $firstnameErr; ?></span>
-                            <input type="text" class="form-control shadow-none" placeholder="Enter first name" name="firstname">
+                            <input type="text" class="form-control shadow-none" placeholder="Enter first name" name="firstname" value="<?php echo $firstname;?>">
                         </div>
                         <div class="col-6 form-group">
                             <label for="lastname"><b>Last Name</b></label>
                             <span class="error">* <?php echo $lastnameErr; ?></span>
-                            <input type="text" class="form-control shadow-none" placeholder="Enter last name" name="lastname">
+                            <input type="text" class="form-control shadow-none" placeholder="Enter last name" name="lastname" value="<?php echo $lastname;?>">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 form-group">
                             <label for="email"><b>Email</b></label>
                             <span class="error">* <?php echo $emailErr; ?></span>
-                            <input type="email" class="form-control shadow-none" placeholder="Enter email address" name="email">
+                            <input type="text" class="form-control shadow-none" placeholder="Enter email address" name="email" value="<?php echo $email;?>">
                         </div>                
                     </div>
                     <div class="row">
-                        <div class="col-6 form-group">
+                        <div class="col-10 form-group">
                             <label for="password"><b>Password</b></label>
                             <span class="error">* <?php echo $passwordErr; ?></span>
                             <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" name="password" 
                                 onkeyup="verifyPassword(this.value, event)" onkeydown="verifyPassword(this.value, event)" 
                                 data-placement="left" data-trigger="keyup" title="Must be at least 8 characters">
                         </div>
-                        <div class="col-6 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-10 form-group">
                             <label for="passwordconfirm"><b>Confirm Password</b></label>
-                            <span class="error">*</span>
-                            <input type="password" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm">
+                            <span class="error">* <?php echo $passwordconfirmErr; ?></span>
+                            <input type="password" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm"
+                            >
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 form-group btncontainer">
-                            <button type="submit"><b>Sign Up</b></button>
+                            <button type="submit" id="submitBtn"><b>Sign Up</b></button>
                         </div>
                     </div>
                 </div>

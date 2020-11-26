@@ -15,6 +15,8 @@ function verifyPassword(password, e) {
     }
 }
 
+
+
 function filterKey(e) {
     // we can filter out unwanted characters from even entering input fields here 
     let key = e.which || e.keyCode;

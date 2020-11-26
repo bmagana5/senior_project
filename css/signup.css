@@ -17,7 +17,7 @@ form {
     border-radius: 0.5rem;
     margin: auto;
     width: 432px;
-    height: 515px;
+    height: 590px;
     padding: 16px 18px;
     user-select: none;
 }
@@ -47,7 +47,7 @@ hr {
     margin: 8px 0px 0px;
 }
 
-button {
+#submitBtn {
     background-color: #108f2c;
     border-radius: 0.5rem;
     color: white;
@@ -60,6 +60,6 @@ button {
     opacity: 0.9;
 }
 
-button:hover {
+#submitBtn:hover {
     opacity: 1.0;
 }
