@@ -18,7 +18,12 @@
 
             function submit_form_data() {
                 // TESTING STATEMENT
-                echo "<script>alert('form data submitted successfully!');</script>";
+
+                require 'connection.php';
+
+                // code to add new user to database goes here
+
+                require 'disconnection.php';
             }
             $username = $firstname = $lastname = $email = $password = $passwordconfirm = '';
             $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwordErr = $passwordconfirmErr = '';
@@ -37,7 +42,7 @@
                         $usernameErr = 'must be at least 6 characters';
                         $submitFormData = false;
                     }
-                    if (!preg_match("/^[0-9a-zA-Z_]*$/", $username)) {
+                    if (!preg_match("/^[0-9a-zA-Z_]+$/", $username)) {
                         $usernameErr = "characters must be alphanumeric or '_'";
                         $username = '';
                         $submitFormData = false;
@@ -49,11 +54,13 @@
                     $submitFormData = false;
                 } else { 
                     $firstname = clean_input($_POST['firstname']);
-                    if (!preg_match("/^[a-zA-Z-']*$/", $firstname)) {
+                    if (!preg_match("/^[a-zA-Z-']+$/", $firstname)) {
                         $firstnameErr = 'Invalid input';
                         $firstname = '';
                         $submitFormData = false;
                     }
+                    strtolower($firstname);
+                    ucfirst($firstname);
                 }
                 // validate last name
                 if (empty($_POST['lastname'])) {
@@ -61,19 +68,21 @@
                     $submitFormData = false;
                 } else { 
                     $lastname = clean_input($_POST['lastname']);
-                    if (!preg_match("/^[a-zA-Z-']*$/", $lastname)) {
+                    if (!preg_match("/^[a-zA-Z-']+$/", $lastname)) {
                         $lastnameErr = 'Invalid input';
                         $lastname = '';
                         $submitFormData = false;
                     }
+                    strtolower($lastname);
+                    ucfirst($lastname);
                 }
                 // validate email
                 if (empty($_POST['email'])) {
                     $emailErr = 'required';
                     $submitFormData = false;
                 } else { 
-                    $email = clean_input($_POST['email']);
-                    if (!preg_match("/^[a-zA-Z0-9!#$%&'*+-\/=?^_`{|}~;]+[@][a-zA-Z0-9-]+[.][a-zA-Z]+$/", $email)) {
+                    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+                    if (!preg_match("/^[a-zA-Z0-9!#$%&'*+-\/=?^_`{|}~]+[@][a-zA-z]+[.][a-zA-Z]+$/", $email)) {
                         $emailErr = 'Invalid email address';
                         $email = '';
                         $submitFormData = false;
@@ -97,13 +106,13 @@
                     $submitFormData = false;
                 } else { 
                     $passwordconfirm = clean_input($_POST['passwordconfirm']);
-                    if ($password != $passwordconfirm) {
+                    if ($password !== $passwordconfirm) {
                         $passwordconfirmErr = 'Passwords do not match';
                         $passwordconfirm = '';
                         $submitFormData = false;
                     }
                 }
-                if ($submitFormData == true) {
+                if ($submitFormData === true) {
                     // if this point is reached, go ahead and submit the form data
                     submit_form_data();
                 }
@@ -113,6 +122,10 @@
         </div>
         <div class="container-fluid body">
             <!-- this page's php script will handle submitted form data -->
+            <div id="userAddSuccess" class="container alert alert-success alert-dismissible " style="display: none;">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Success!</strong> User successfully added to database!
+            </div>
             <form method="post" action="<?php echo htmlspecialchars_decode($_SERVER['PHP_SELF']); ?>" class="shadow bg-white">
                 <div class="container form-content">
                     <h2>Sign Up</h2>
@@ -177,7 +190,7 @@
             </form>
         </div>
         <div class="footer">
-
+            <?php include 'footer.php'; ?>
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
