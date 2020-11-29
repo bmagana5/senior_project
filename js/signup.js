@@ -88,15 +88,8 @@ function confirmFieldValidity() {
     if (isFieldValid['username'] == true && isFieldValid['fullname'] == true && 
         isFieldValid['email'] == true && isFieldValid['password'] == true && 
         isFieldValid['confirmpassword'] == true) {
-        // alert('be free');
         return true;
     } else {
         return false;
-        // alert(`you shall not pass: username: ${isFieldValid['username']}
-        //     fullname: ${isFieldValid['fullname']}
-        //     email: ${isFieldValid['email']}
-        //     password: ${isFieldValid['password']}
-        //     confirmpassword: ${isFieldValid['confirmpassword']}` 
-        // );
     }
 }
