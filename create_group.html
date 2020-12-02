@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Group Form</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.container {
+    padding: 16px;
+    background-color: white;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.registerbtn:hover {
+    opacity: 1;
+}
+
+/* Add a blue text color to links */
+a {
+    color: dodgerblue;
+}
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+    background-color: #f1f1f1;
+    text-align: center;
+}
+        </style>
+    </head>
+    <body>
+        <form>
+            <div class="container">
+                <h1>Create Group</h1>
+                <p>Want to create a new group? Let's get started!</p>
+                <hr>
+
+                <label for="groupname"><b>Group Name </b>
+                    <a data-toggle="tooltip" title="Name must be up to 8-32 characters. Profanity and hate words are not allowed.">(?)</a></label>
+                <input type="text" placeholder="Group Name" name="group" id="group" required>
+                <label for="category"><b>Category </b>
+                    <a data-toggle="tooltip" title="What category/interests does your group fit in?">(?)</a></label>
+                <form>
+                    <select name="Category" class="custom-select">
+                        <option selected>Select Category</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="gaming">Gaming</option>
+                        <option value="lifestyle">Lifestyle</option>
+                    </select>
+                </form>
+                <label for="preferences"><b>Group Preferences </b><a data-toggle="tooltip" title="For public, anyone can join. For private, certain users you invite can join.">(?)</a> </label><br>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="public" name="choice1" value="public">
+                    <label class="custom-control-label" for="public">Public</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="private" name="choice1" value="private">
+                    <label class="custom-control-label" for="private">Private</label>
+                </div>
+                <br>
+                <label for="psw"><b>Requires Password?</b>
+                    <a data-toggle="tooltip" title="Users that want to join your group will request a password via messages upon your approval. (Note: Message will be sent privately.)">(?)</a></label>
+                <br>
+                <input type="radio" name="choices" value="yes"> Yes
+                <input type="radio" name="choices" value="no"> No
+                <div id="yes" class="desc"><input type="password" placeholder="Enter Password" name="psw" id="psw" required></div>
+                <div id="no" class="desc"></div>
+                <hr>
+                <p>By creating a group, you must agree to the <a href="#">Terms & Privacy</a>.</p>
+
+                <button type="submit" class="registerbtn">Create Group</button>
+            </div>
+        </form>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+    });
+$(document).ready(function() {
+    $("div.desc").hide();
+    $("input[name$='choices']").click(function() {
+        var test = $(this).val();
+        $("div.desc").hide();
+        $("#" + test).show();
+    });
+});
+
+        </script>
+    </body>
+</html>
