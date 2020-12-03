@@ -22,9 +22,10 @@
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 switch($_POST['form-type']) {
                     case 'sign-up':
-                        $this->insertUser($_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['password']);
+                        $this->insertUser($_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['signup-password']);
                         break;
-                    case 'sign-in':
+                    case 'log-in':
+                        $this->getUser($_POST['login-userfield'], $_POST['login-password']);
                         break;
                     default:
                         // this should never be reached, really
@@ -33,6 +34,10 @@
             } else {
                 echo "POST request method was not used.";
             }
+        }
+
+        private function getUser($userfield, $password) {
+
         }
 
         private function insertUser($username, $fullname, $email, $password) {
@@ -47,10 +52,12 @@
         }
     
         private function encryptPassword($password) {
-            // use exec to call python script and use bcrypt algorithm from bcrypt module
-            // have it return hashed password with salt prepended to it
-            $hashed_password = exec('python ./python/encryptpw.py .$password');
-            echo '**hashed password is: ' . $hashed_password . "**";
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+            /* 
+                when logging in, use the username to fetch and load the hash from the database into a variable.
+                then use password_verify($password_from_form_input, $hash_from_database) to compare and 
+                validate credentials for the user.
+            */
             return $hashed_password;
         }
     

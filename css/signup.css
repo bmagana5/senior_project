@@ -1,18 +1,42 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
 .header {
-    height: 20%;
-    background-color: #556ea6;
+    height: 75px;
+    background-image: linear-gradient(to right, rgb(128, 155, 230), rgb(26, 163, 163), rgb(3, 14, 163));
+    overflow: auto;
+}
+
+h1#projectname {
+    color: white;
+    margin: 0;
+    font-family: 'Yellowtail', cursive;
+    text-align: center;
+    height: 100%;
+    padding-top: 15px;
+    user-select: none;
+    font-size: 2.5em;
+    white-space: nowrap;
 }
 
 .body {
     background-color: #ebedf0;
     padding: 22px 0px 30px; /* top, left&right, bottom */
+    height: 650px;
+}
+
+.footer {
+    height: 60px;
 }
 
 h2 {
     margin: 0px;
+    font-family: 'Yellowtail', cursive;
 }
 
-form {
+form.block {
     background-color: white;
     border-radius: 0.5rem;
     margin: auto;
@@ -20,6 +44,37 @@ form {
     height: 590px;
     padding: 16px 18px;
     user-select: none;
+}
+
+label.inline-label {
+    color: white;
+    font-size: 0.9em;
+    user-select: none;
+    white-space: nowrap;
+    margin-bottom: 0.2rem;
+}
+
+input.inline-field {
+    height: calc(1.5em + 0.2rem);
+    padding: .175rem;
+}
+
+#inline-submit-btn {
+    background-color: rgb(24, 95, 248);
+    opacity: 1.0;
+    color: white;
+    outline: none;
+}
+
+#inline-submit-btn:hover {
+    outline: none;
+    opacity: 0.9;
+
+}
+
+#inline-submit-btn:active {
+    outline: none;
+    opacity: 0.8;
 }
 
 span.error {
@@ -48,7 +103,7 @@ hr {
 }
 
 #submitBtn {
-    background-color: #108f2c;
+    background-image: linear-gradient(to right, rgb(128, 155, 230), rgb(26, 163, 163));
     border-radius: 0.5rem;
     color: white;
     font-size: 14pt;
@@ -57,9 +112,16 @@ hr {
     border: none;
     cursor: pointer;
     width: 50%;
-    opacity: 0.9;
+    opacity: 0.8;
+    outline: none;
 }
 
 #submitBtn:hover {
+    opacity: 0.9;
+    outline: none;
+}
+
+#submitBtn:active {
+    outline: none;
     opacity: 1.0;
 }

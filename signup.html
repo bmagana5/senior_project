@@ -6,18 +6,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="css/signup.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
     </head>
-    <body>
-        
+    <body>     
         <div class="container-fluid header">
+            <div class="row">
+                <div class="col-6">
+                    <h1 id="projectname">Social Media Project</h1>
+                </div>
+                <div class="col-2"><!-- Just a formatting div; nothing more --></div>
+                <div class="col-4">
+                    <form method="post" action="connection.php">
+                        <input type="text" name="form-type" value="log-in" hidden>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label for="login-userfield" class="inline-label">Enter username or email</label>
+                                    <input type="text" name="login-userfield" class="form-control shadow-none inline-field">    
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label for="login-password" class="inline-label">Password</label>
+                                    <input type="password" name="login-password" class="form-control shadow-none inline-field">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="badge mt-4" id="inline-submit-btn">Log In</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="container-fluid body">
-            <!-- this page's php script will handle submitted form data -->
             <div id="userAddSuccess" class="container alert alert-success alert-dismissible " style="display: none;">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Success!</strong> User successfully added to database!
             </div>
-            <form method="post" action="connection.php" class="shadow bg-white" onsubmit="confirmFieldValidity()">
+            <form method="post" action="connection.php" class="shadow bg-white block" onsubmit="confirmFieldValidity()">
                 <input type="text" name="form-type" value="sign-up" hidden>
                 <div class="container form-content">
                     <h2>Sign Up</h2>
@@ -55,10 +83,10 @@
                     </div>
                     <div class="row">
                         <div class="col-10 form-group">
-                            <label for="password"><b>Password</b></label>
+                            <label for="signup-password"><b>Password</b></label>
                             <span class="error">* </span><span class="error" id="errorpasswordField"></span>
                             <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" 
-                                name="password" onkeyup="validateField(this)" onkeydown="validateField(this)" data-placement="left" 
+                                name="signup-password" onkeyup="validateField(this)" onkeydown="validateField(this)" data-placement="left" 
                                 data-trigger="keyup" title="Must be at least 8 characters">
                         </div>
                     </div>
@@ -79,8 +107,9 @@
                 </div>
             </form>
         </div>
-        <div class="footer" onload="">
-            <!-- <?php include 'footer.php'; ?> -->
+        <div class="footer">
+            <p class='container' style='font-size: 12px;'>
+                Social Media Project &copy; 2020
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
