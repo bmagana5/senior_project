@@ -84,12 +84,47 @@ function checkPassword(password, confirm) {
 
 // this function will ensure that when the form is submitted, it'll only succeed if the 
 // form data is completely valid
-function confirmFieldValidity() {
-    if (isFieldValid['username'] == true && isFieldValid['fullname'] == true && 
-        isFieldValid['email'] == true && isFieldValid['password'] == true && 
-        isFieldValid['confirmpassword'] == true) {
+function confirmFieldValidity(e) {
+    if (isFieldValid['username'] && isFieldValid['fullname'] && 
+        isFieldValid['email'] && isFieldValid['password'] && 
+        isFieldValid['confirmpassword']) {
         return true;
     } else {
-        return false;
+        if (!document.getElementById('alertMessage')) {
+            let div = document.createElement("div");
+            let div_class = document.createAttribute("class");
+            div_class.value = "alert alert-danger alert-dismissible container";
+            let div_id = document.createAttribute('id');
+            div_id.value = "alertMessage";
+            div.setAttributeNode(div_class);
+            div.setAttributeNode(div_id);
+            
+            let button = document.createElement("button");
+            let button_class = document.createAttribute('class');
+            button_class.value = "close";
+            let button_type = document.createAttribute('type');
+            button_type.value = 'button';
+            let button_data_dismiss = document.createAttribute("data-dismiss");
+            button_data_dismiss.value = "alert";
+            let button_text = document.createTextNode('×');
+            button.setAttributeNode(button_class);
+            button.setAttributeNode(button_type);
+            button.setAttributeNode(button_data_dismiss);
+            button.appendChild(button_text);
+            
+            let strong = document.createElement('strong');
+            let strong_text = document.createTextNode('Invalid input in one or more fields: ');
+            strong.appendChild(strong_text);
+    
+            let text = document.createTextNode('Check your fields');
+            div.appendChild(button);
+            div.appendChild(strong);
+            div.appendChild(text);
+
+            let second_div = document.querySelector('div.body');
+            let first_child = second_div.firstChild;
+            second_div.insertBefore(div, first_child);
+        }
     }
+    return false;
 }

@@ -18,11 +18,16 @@
                 // echo "Connection established successfully<br>";
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage() . "<br>";
+                // return to sign up form and display appropriate message
             }
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 switch($_POST['form-type']) {
                     case 'sign-up':
-                        $this->insertUser($_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['signup-password']);
+                        if ($this->checkUserEmailAvailability($_POST['username'], $_POST['email'])) {
+                            $this->insertUser($_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['signup-password']);
+                        } else {
+                            echo "username or email already in use!";
+                        }
                         break;
                     case 'log-in':
                         $this->getUser($_POST['login-userfield'], $_POST['login-password']);
@@ -36,12 +41,51 @@
             }
         }
 
-        private function getUser($userfield, $password) {
+        private function checkUserEmailAvailability($username, $email) {
+            $query1 = "call getUsername('$username')";
+            $query2 = "call getEmailAddress('$email')";
+            try {
+                $stmt = $this->connection->prepare($query1);
+                $stmt->execute();
+                $q1 = $stmt->fetch();
 
+                $stmt = $this->connection->prepare($query2);
+                $stmt->execute();
+                $q2 = $stmt->fetch();
+                // if any of them exists, return false
+                return !($q1 || $q2);
+            } catch (PDOException $e) {
+                echo $query . "<br>" . $e->getMessage();
+            }
+        }
+
+        private function getUser($userfield, $password) {
+            // check if user exists in database
+            $query = "call getUserPasswordInfo('$userfield')";
+            try {
+                $stmt = $this->connection->prepare($query);
+                $stmt->execute();
+                $user = $stmt->fetch();
+                if ($user) {
+                    // echo "username valid!<br>";
+                    if (password_verify($password, $user['pwd_hash'])) {
+                        echo "password is verified";
+                        // load the user's webpage
+                    } else { 
+                        echo "password is wrong"; 
+                        return;
+                    }
+                } else {
+                    echo "username or email address not found";
+                    return;
+                }
+            } catch (PDOException $e) {
+                echo $query . "<br>" . $e->getMessage();
+            }
         }
 
         private function insertUser($username, $fullname, $email, $password) {
-            $passwd_id = $this->insertPassword($this->encryptPassword($password));
+            $passwd_id = $this->insertPassword(password_hash($password, PASSWORD_BCRYPT));
             $passwd_id = strval($passwd_id);
             $query = "insert into user (username, full_name, user_passwd_id, email_address) values ('${username}', '${fullname}', ${passwd_id}, '${email}')";
             try {
@@ -50,17 +94,7 @@
                 echo $query . "<br>" . $e->getMessage();
             }
         }
-    
-        private function encryptPassword($password) {
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-            /* 
-                when logging in, use the username to fetch and load the hash from the database into a variable.
-                then use password_verify($password_from_form_input, $hash_from_database) to compare and 
-                validate credentials for the user.
-            */
-            return $hashed_password;
-        }
-    
+
         function insertPassword($hashed_password) {
             $query = "insert into password (pwd_hash) values ('" . $hashed_password . "')";
             try {

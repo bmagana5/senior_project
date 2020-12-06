@@ -8,44 +8,41 @@
         <link rel="stylesheet" href="css/signup.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>     
-        <div class="container-fluid header">
-            <div class="row">
-                <div class="col-6">
-                    <h1 id="projectname">Social Media Project</h1>
-                </div>
-                <div class="col-2"><!-- Just a formatting div; nothing more --></div>
-                <div class="col-4">
-                    <form method="post" action="connection.php">
-                        <input type="text" name="form-type" value="log-in" hidden>
-                        <div class="row">
-                            <div class="col-5">
-                                <div class="form-group">
-                                    <label for="login-userfield" class="inline-label">Enter username or email</label>
-                                    <input type="text" name="login-userfield" class="form-control shadow-none inline-field">    
-                                </div>
+        <div class="container-fluid header row col-xl-12">
+            <div class="col-6">
+                <h1 id="projectname">Social Media Project</h1>
+            </div>
+            <div class="col-sm-2"><!-- Just a formatting div; nothing more --></div>
+            <div class="col-md-4 mt-2">
+                <form method="post" action="connection.php">
+                    <input type="text" name="form-type" value="log-in" hidden>
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <div class="form-group">
+                                <label for="login-userfield" class="inline-label">Enter username or email</label>
+                                <input type="text" name="login-userfield" class="form-control shadow-none inline-field">    
                             </div>
-                            <div class="col-5">
-                                <div class="form-group">
-                                    <label for="login-password" class="inline-label">Password</label>
-                                    <input type="password" name="login-password" class="form-control shadow-none inline-field">
-                                </div>
+                        </div>
+                        <div class="col-xl-5">
+                            <div class="form-group">
+                                <label for="login-password" class="inline-label">Password</label>
+                                <input type="password" name="login-password" class="form-control shadow-none inline-field">
                             </div>
-                            <div class="col-2">
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="form-group">
                                 <button type="submit" class="badge mt-4" id="inline-submit-btn">Log In</button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="container-fluid body">
-            <div id="userAddSuccess" class="container alert alert-success alert-dismissible " style="display: none;">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Success!</strong> User successfully added to database!
-            </div>
-            <form method="post" action="connection.php" class="shadow bg-white block" onsubmit="confirmFieldValidity()">
+            <form method="post" action="connection.php" class="shadow bg-white block" onsubmit="return confirmFieldValidity();">
                 <input type="text" name="form-type" value="sign-up" hidden>
                 <div class="container form-content">
                     <h2>Sign Up</h2>
