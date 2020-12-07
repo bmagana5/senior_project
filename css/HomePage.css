@@ -1,0 +1,102 @@
+html {
+  background-color: ;
+}
+.btn{
+
+}
+.mb-4 {
+  width: 60%;
+}
+#navbarHeader {
+  position: fixed;
+  width: 100%;
+}
+.navbar {
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+}
+.container{
+
+}
+#topbar {
+  width: 50%;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  width: 50%;
+  max-width: 40rem;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+.form-control{
+  border: 1px solid #bdbdbd;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  width: 20rem;
+  padding-left: 2rem;
+}
+
+
+#sidenav {
+height: 100%;
+width: 550px;
+position: fixed;
+top: 0;
+right: 80px;
+background-color: #f8f9fa;
+overflow-x: hidden;
+transition: 0.5s;
+padding-top: 10px;
+transition: all 300ms ease 0s;
+}
+
+#sidenav a {
+padding: 0px 0px 0px 90px;
+margin: 0px;
+text-decoration: none;
+color: #0e1c2c;
+display: block;
+transition: 0.3s
+}
+
+#sidenav a:hover {
+color: #ea4e3c;
+}
+
+@media (max-width: 1208px) {
+    #sidenav {
+        display: none;
+    }
+}
+
+.suggestions {
+  background-color: white;
+  padding-left: 20px;
+  padding-top: 20px;
+  display: block;
+  width: 400px;
+  height: 450px;
+}
+.group_suggest{
+  background-color: #f8f9fa;
+  padding-top: 10px;
+  padding-left: 10px;
+  display: block;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  width: 350px;
+  height: 90px;
+}
