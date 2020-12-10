@@ -55,15 +55,30 @@
         </svg>
         <strong>UChat</strong>
       </a>
-      <!-- Search form -->
-      <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+     
+      <!--This includes the file that will connect to the database using PDO-->
+
+
+        
+            <input type="text" class="form-control" placeholder="Search" name="search">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+         
+     
+  
+      <!--buttons -->
           <div class="container"id="topbar">
             <div class="btn-toolbar" role="toolbar">
-        <a href="#" class="btn btn-primary btn-sm">Primary action</a>
+        <a href="post_insert.php" class="btn btn-primary btn-sm">Post</a>
         <a href="#" class="btn btn-secondary btn-sm">Secondary action</a>
         <a href="#" class="btn btn-secondary btn-sm">Third action</a>
             </div>
           </div>
+  
+
     </div>
   </div>
 </header>
@@ -73,10 +88,7 @@
 <div class="album py-5 bg-light">
 
 <main role="main">
-  <!--This includes the file that will connect to the database using PDO-->
-    <?php
-require_once 'connect.php';
-?>
+
   
 <div class="container">
     <div id="sidenav">
@@ -144,6 +156,43 @@ require_once 'connect.php';
               </div>
             </div>
           </div>
+   <?php
+   require_once 'connect.php';
+      $table = '' .$_GET["searchby"];
+      $string = $_GET["search"];
+      $page = 'HomePage.php?';
+      
+      $cur_url = $page;
+      $search = $_GET['search'];
+      if ($table != '')
+        $cur_url .= 'searchby='.$table.'&search='.$string.'&';
+      // Set DSN
+  // Set DSN
+  $dsn = 'pgsql:host='. $host .';dbname='. $db;
+
+  // Create a PDO instance
+  $pdo = new PDO($dsn, $user, $pass);
+  $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
+
+  // PDO QUERY: view animal table
+  $first_query = 'SELECT * FROM users';
+
+  $stmt = $pdo->query($first_query);
+  if(!is_null($stmt)) {
+echo '<table class= "table-1" style ="width:100%;text-align:center;">';
+  echo '<tr><th>username</th>';
+      echo '<th>full name</th>';
+      echo '<th>email</th>';
+      echo '<th>date joined</th>';
+      echo '<th>profile bio</th>
+        </tr>';
+  }
+  
+  while($row = $stmt->fetch()){
+    echo '<tr><td>' .$row['username'] .'</td><td>' .$row['full_name'] .'</td><td>' .$row['email_address'] .'</td><td>' .$row['date_joined'] .'</td><td>' .$row['profile_bio'] .'</td></tr>'; 
+  }
+  echo '</table>';
+?>
 
       
     </div>
