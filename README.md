@@ -1,4 +1,4 @@
-# senior_project
+# Some Git commands
 Git commands:
 
 git clone https://github.com/repo_name.git  --  use this to clone entire repo to current working directory
@@ -16,3 +16,6 @@ git switch some-branch
 
 git checkout -b new_branch                  --  this creates a new_branch and switches to it
 git switch -c new_branch                    --  this does the same thing (can also use --create flag)
+
+
+CHECK OUT SPATIALCHAT ->    find out how they work. maybe this is something to consider with k-means clustering algorithm.

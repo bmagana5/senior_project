@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require 'credentials.php';
 
     class Connection {
@@ -18,29 +19,74 @@
                 // echo "Connection established successfully<br>";
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage() . "<br>";
-                // return to sign up form and display appropriate message
+                exit();
             }
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                switch($_POST['form-type']) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $this->connection) {
+
+                $form_type = $this->test_input($_POST['form-type']);
+
+                switch($form_type) {
                     case 'sign-up':
-                        if ($this->checkUserEmailAvailability($_POST['username'], $_POST['email'])) {
-                            $this->insertUser($_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['signup-password']);
+                        // clean and store all of the form data
+                        $username = $this->test_input($_POST['username']);
+                        $fullname = $this->test_input($_POST['fullname']);
+                        $email = $this->test_input($_POST['email']);
+                        $signup_password = $this->test_input($_POST['signup-password']);
+                        $passwordconfirm = $this->test_input($_POST['passwordconfirm']);
+                        $form_url = $this->test_input($_POST['form-url']);
+
+                        if ($this->checkUserEmailAvailability($username, $email)) {
+                            $this->insertUser($username, $fullname, $email, $signup_password);
+                            header('Location: home.php');
                         } else {
-                            echo "username or email already in use!";
+                            header('Location: ' . $form_url);
+                            session_destroy();
                         }
                         break;
                     case 'log-in':
-                        $this->getUser($_POST['login-userfield'], $_POST['login-password']);
+                        // clean and store all of the form data
+                        $login_userfield = $this->test_input($_POST['login-userfield']);
+                        $login_password = $this->test_input($_POST['login-password']);
+                        $form_url = $this->test_input($_POST['form-url']);
+
+                        if ($this->getUser($login_userfield, $login_password)) {
+                            header('Location: home.php');
+                        } else {
+                            header('Location: ' . $form_url);
+                            session_destory();
+                        }
                         break;
                     default:
                         // this should never be reached, really
                         break;
                 }
             } else {
-                echo "POST request method was not used.";
+                $form_url = $this->test_input($_POST['form-url']);
+
+                header('Location: ' . $form_url);
+                session_destroy();
             }
+            exit();
         }
 
+        /**
+         * Takes in user data and cleanses it of any potentially harmful content.
+         * @param data any piece of user form data submitted in an HTML form
+         * @return data a cleaned-up version of the originally submitted data through a user form
+         */
+        private static function test_input($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+        /**
+         * Check to see if a username or email address are not already in use in the database.
+         * @param username a username that the user intends to associate with their account
+         * @param email an email address the user intends to associate with their account
+         * @return True/False returns true if neither of the provided fields are already in use in the database
+         */
         private function checkUserEmailAvailability($username, $email) {
             $query1 = "call getUsername('$username')";
             $query2 = "call getEmailAddress('$email')";
@@ -55,10 +101,16 @@
                 // if any of them exists, return false
                 return !($q1 || $q2);
             } catch (PDOException $e) {
-                echo $query . "<br>" . $e->getMessage();
+                echo $e->getMessage() . "<br>";
+                exit();
             }
         }
 
+        /** 
+         * Will determine if a password is associated with a username
+         * @param userfield a username or email address submitted by a user to log in
+         * @param password a password submitted by a user upon logging in
+         */
         private function getUser($userfield, $password) {
             // check if user exists in database
             $query = "call getUserPasswordInfo('$userfield')";
@@ -67,21 +119,16 @@
                 $stmt->execute();
                 $user = $stmt->fetch();
                 if ($user) {
-                    // echo "username valid!<br>";
                     if (password_verify($password, $user['pwd_hash'])) {
-                        echo "password is verified";
-                        // load the user's webpage
-                    } else { 
-                        echo "password is wrong"; 
-                        return;
+                        $_SESSION['user_id'] = $user['user_id'];
+                        return true;
                     }
-                } else {
-                    echo "username or email address not found";
-                    return;
                 }
             } catch (PDOException $e) {
                 echo $query . "<br>" . $e->getMessage();
+                exit();
             }
+            return false;
         }
 
         private function insertUser($username, $fullname, $email, $password) {
@@ -92,15 +139,18 @@
                 $this->connection->exec($query);
             } catch (PDOException $e) {
                 echo $query . "<br>" . $e->getMessage();
+                exit();
             }
+            $_SESSION['user_id'] = $this->connection->lastInsertId();
         }
 
-        function insertPassword($hashed_password) {
+        private function insertPassword($hashed_password) {
             $query = "insert into password (pwd_hash) values ('" . $hashed_password . "')";
             try {
                 $this->connection->exec($query);
             } catch (PDOException $e) {
                 echo "**${query}**<br>" . $e->getMessage();
+                exit();
             }
             return $this->connection->lastInsertId();
         }

@@ -5,7 +5,7 @@ html, body {
 
 .header {
     /* height: 6em; */
-    background-image: linear-gradient(to right, rgb(128, 155, 230), rgb(26, 163, 163), rgb(3, 14, 163));
+    background-image: linear-gradient(to right, rgb(167, 169, 173), rgb(79, 83, 83), rgb(23, 24, 26));
     margin: 0;
     overflow: auto;
 }
@@ -42,9 +42,10 @@ form.block {
     border-radius: 0.5rem;
     margin: auto;
     width: 432px;
-    height: 590px;
+    height: 600px;
     padding: 16px 18px;
     user-select: none;
+    overflow:auto;
 }
 
 label.inline-label {
@@ -62,7 +63,7 @@ input.inline-field {
 }
 
 #inline-submit-btn {
-    background-color: rgb(24, 95, 248);
+    background-color: rgb(79, 83, 83);
     opacity: 1.0;
     color: white;
     outline: none;
@@ -82,7 +83,7 @@ input.inline-field {
 #navbar-btn {
     color: white;
     font-size: 0.9em;
-    background-image: linear-gradient(to right, rgb(128, 155, 230), rgb(26, 163, 163));
+    background-image: linear-gradient(to right, rgb(167, 169, 173), rgb(79, 83, 83));
     border-color: white;
     float: right;
 }
@@ -113,7 +114,7 @@ hr {
 }
 
 #submitBtn {
-    background-image: linear-gradient(to right, rgb(128, 155, 230), rgb(26, 163, 163));
+    background-image: linear-gradient(to right,  rgb(167, 169, 173), rgb(79, 83, 83));
     border-radius: 0.5rem;
     color: white;
     font-size: 14pt;

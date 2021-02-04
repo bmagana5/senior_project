@@ -17,7 +17,9 @@
             </div>
             <div class="col-sm-2"><!-- Just a formatting div; nothing more --></div>
             <div class="col-md-4 mt-2">
+                <!-- Login Form is here -->
                 <form method="post" action="connection.php">
+                    <input type="text" name="form-url" value="login.html" hidden>
                     <input type="text" name="form-type" value="log-in" hidden>
                     <div class="row">
                         <div class="col-xl-5">
@@ -42,7 +44,9 @@
             </div>
         </div>
         <div class="container-fluid body">
-            <form method="post" action="connection.php" class="shadow bg-white block" onsubmit="return confirmFieldValidity();">
+            <!-- Signup From is here -->
+            <form method="post" action="connection.php" class="shadow bg-white block needs-validation" novalidate>
+                <input hidden type="text" name="form-url" value="signup.html">
                 <input type="text" name="form-type" value="sign-up" hidden>
                 <div class="container form-content">
                     <h2>Sign Up</h2>
@@ -51,13 +55,7 @@
                     <div class="row">
                         <div class="col-sm-12 form-group">
                             <label for="username"><b>Username</b></label>
-                            <span class="error">* </span><span class="error" id="errorusernameField"></span>
-                            <span><em id="usernameHint" style="font-size: 14px;"></em></span>
-                            <!-- use 'shadow-none' class to remove bright blue glow outline on focused input fields -->
-                            <input type="text" id="usernameField" class="form-control shadow-none" value=""
-                                placeholder="Enter username" name="username" onkeyup="validateField(this)" 
-                                onkeydown="validateField(this)" data-placement="left" data-trigger="keyup" 
-                                title="Must be at least 6 characters">
+                            <input type="text" id="usernameField" class="form-control shadow-none" placeholder="Enter username" name="username" required>
                             <div class="valid-feedback">Valid username.</div>
                             <div class="invalid-feedback">Username not available.</div>
                         </div>
@@ -65,35 +63,29 @@
                     <div class="row">
                         <div class="col-12 form-group">
                             <label for="fullname"><b>Full Name</b></label>
-                            <span class="error">* </span><span class="error" id="errorfullnameField"></span>
-                            <input type="text" id="fullnameField" class="form-control shadow-none" placeholder="Enter full name" 
-                                name="fullname" value="" onkeyup="validateField(this)">
-                        </div>
+                            <input type="text" id="fullnameField" class="form-control shadow-none" placeholder="Enter full name" name="fullname" required>
+                            <div class="valid-feedback">Valid field.</div>
+                            <div class="invalid-feedback">Invalid field.</div> </div>
                     </div>
                     <div class="row">
                         <div class="col-12 form-group">
                             <label for="email"><b>Email</b></label>
-                            <span class="error">* </span><span class="error" id="erroremailField"></span>
-                            <input type="text" id="emailField" class="form-control shadow-none" placeholder="Enter email address" 
-                                name="email" value="" onkeyup="validateField(this)">
-                        </div>                
+                            <input type="email" id="emailField" class="form-control shadow-none" placeholder="Enter email address" name="email" required>
+                            <div class="valid-feedback">Valid email address.</div>
+                            <div class="invalid-feedback">Invalid email address.</div> </div>                
                     </div>
                     <div class="row">
                         <div class="col-10 form-group">
                             <label for="signup-password"><b>Password</b></label>
-                            <span class="error">* </span><span class="error" id="errorpasswordField"></span>
-                            <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" 
-                                name="signup-password" onkeyup="validateField(this)" onkeydown="validateField(this)" data-placement="left" 
-                                data-trigger="keyup" title="Must be at least 8 characters">
-                        </div>
+                            <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" name="signup-password" required>
+                            <div class="valid-feedback">Valid password.</div>
+                            <div class="invalid-feedback">Invalid password.</div>
+                         </div>
                     </div>
                     <div class="row">
                         <div class="col-10 form-group">
                             <label for="passwordconfirm"><b>Confirm Password</b></label>
-                            <span class="error">* </span>
-                            <input type="password" id="confirmpasswordField" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm"
-                            onkeyup="checkPassword(document.getElementById('passwordField').value,this.value)"
-                            data-placement="left" data-trigger="keyup" title="Passwords do not match">
+                            <input type="password" id="confirmpasswordField" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm" required>
                         </div>
                     </div>
                     <div class="row">
@@ -108,6 +100,25 @@
             <p class='container' style='font-size: 12px;'>
                 Social Media Project &copy; 2020
         </div>
+        <script>
+            (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Get the forms we want to add validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+                });
+            }, false);
+            })();
+        </script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
