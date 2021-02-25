@@ -11,8 +11,8 @@
     </head>
     <body>
         <div class="container-fluid body">
-            <h1 id="title-header">Social Media Project</h1>
-            <form method="post" action="connection.php" class="shadow bg-white needs-validation" novalidate>
+            <h1 class="title-header">Social Media Project</h1>
+            <form method="post" action="createConnection.php" class="shadow bg-white needs-validation" novalidate>
                 <input type="text" name="form-url" value="login.html" hidden>
                 <input type="text" name="form-type" value="log-in" hidden>
                 <div class="container form-content">
@@ -39,8 +39,11 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-12 btncontainer">
-                            <button type="submit" id="submitBtn"><b>Log In</b></button>
+                            <button type="submit" id="submit-btn"><b>Log In</b></button>
                         </div>
+                    </div>
+                    <div class="signup-link">
+                        <a href="signup.html">Don't have an account? Sign up here.</a>
                     </div>
                 </div>
             </form>

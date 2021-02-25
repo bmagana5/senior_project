@@ -4,7 +4,6 @@ html, body {
 }
 
 .header {
-    /* height: 6em; */
     background-image: linear-gradient(to right, rgb(167, 169, 173), rgb(79, 83, 83), rgb(23, 24, 26));
     margin: 0;
     overflow: auto;
@@ -42,7 +41,6 @@ form.block {
     border-radius: 0.5rem;
     margin: auto;
     width: 432px;
-    height: 600px;
     padding: 16px 18px;
     user-select: none;
     overflow:auto;
@@ -119,7 +117,7 @@ hr {
     color: white;
     font-size: 14pt;
     padding: 6px 16px;
-    margin: 0px;
+    margin-bottom: 10px;
     border: none;
     cursor: pointer;
     width: 50%;

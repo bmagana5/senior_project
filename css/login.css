@@ -3,13 +3,28 @@ html, body {
     height: 100%;
 }
 
+form {
+    background-color: white;
+    border-radius: 0.5rem;
+    margin: auto;
+    width: 400px;
+    /* height: 375px; */
+    padding: 20px 15px;
+    user-select: none;
+}
+
+h5 {
+    margin: 0px;
+    text-align: center;
+}
+
 .body {
     background-color: #ebedf0;
     padding: 80px 0px 70px; /* top, left&right, bottom */
     overflow: auto;
 }
 
-h1#title-header {
+.title-header {
     margin: auto;
     font-family: 'Yellowtail', cursive;
     text-align: center;
@@ -20,7 +35,7 @@ h1#title-header {
     margin-top: 1rem;
 }
 
-#submitBtn {
+#submit-btn {
     background-image: linear-gradient(to right,  rgb(167, 169, 173), rgb(79, 83, 83));
     border-radius: 0.4rem;
     color: white;
@@ -35,29 +50,19 @@ h1#title-header {
     height: 100%;
 }
 
-#submitBtn:hover {
+#submit-btn:hover {
     opacity: 0.9;
     outline: none;
 }
 
-#submitBtn:active {
+#submit-btn:active {
     outline: none;
     opacity: 1.0;
 }
 
-form {
-    background-color: white;
-    border-radius: 0.5rem;
-    margin: auto;
-    width: 400px;
-    height: 375px;
-    padding: 20px 15px;
-    user-select: none;
-}
-
-h5 {
-    margin: 0px;
+.signup-link {
     text-align: center;
+    font-size: 10pt;
 }
 
 .footer {
