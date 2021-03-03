@@ -1,4 +1,5 @@
 <?php
+# basic php function
 require_once 'credentials.php';
 
 $dsn = "mysql:host=$host;dbname=$db;";
