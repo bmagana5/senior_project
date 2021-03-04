@@ -149,7 +149,7 @@
             $pfp_id = self::createProfilePicture();
             $pfp_id = strval($pfp_id);
 
-            $query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id) values ('${username}', '${fullname}', ${passwd_id}, '${email}', ${pfp_id})";
+            $query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id, profile_bio) values ('${username}', '${fullname}', ${passwd_id}, '${email}', ${pfp_id}, '')";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';

@@ -2,26 +2,21 @@
     session_start();
     require '../connection.php';
 
+    // print_r($_REQUEST);
     if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $_REQUEST['user_id']) {
         $user_id = $_REQUEST['user_id'];
-        // print_r($_SESSION);
-        // echo '<div>First thing is first, here is the session variable: ' . $_SESSION['user_id'] . '</div><br>';
-        // echo '<div>datafetcher.php says: user id is ' . $user_id . '</div><br>';
-        // echo '<div>If you see this, that means that it worked! Progress ^,^</div><br>';
-        echo Connection::testFunction();
-        // we want to get tuples for all of our friends
-        $friends = Connection::getFriendsList($user_id);
-        foreach ($friends as $key=>$value) {
-            echo "<div>" . $key . "<br>";
-            foreach ($value as $k=>$v) {
-                echo $k . ": " . $v . "<br>";
-            }
-            echo "</div>";
+        switch ($_REQUEST['element_id']) {
+            case 'friend-list-bar': 
+                // echo "find friends";
+                // get the user's friends list from database, encode it and send it to JavaScript
+                $friends = Connection::getFriendsList($user_id);
+                echo json_encode($friends);
+                break;
+            default:
+                echo "<div style='color: red;'>incorrect element specified. Double-check element ID name</div>";
         }
     } else {
         echo "<div class=''>Uh oh, something went wrong! Session is not created or user id not passed in!</div>";
     }
-
-
 
 ?>
