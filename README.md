@@ -25,5 +25,5 @@ The profile page includes the following:
 Current things I'm working on:
 
 * Create connection 'connection.php'
-* Create database for posts and friends
+* Create sql database for posts, comments, and friends
 * Add functionality to the page (php, sql, etc.)
