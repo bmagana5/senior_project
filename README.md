@@ -1,9 +1,9 @@
 # Senior Project
 ## **CMPS 4910-4928 Group 7**
 
-**Updated: 3/2/21 \** 
-**Instructor: A. Cruz \**  
-**Created by: Theodore Barcelona \** 
+**Updated: 3/2/21 \ 
+Instructor: A. Cruz \   
+Created by: Theodore Barcelona** 
 
 Senior Project: Group-Based Social Media \
 Social Media Website Role: \
