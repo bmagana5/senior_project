@@ -149,7 +149,20 @@
             $pfp_id = self::createProfilePicture();
             $pfp_id = strval($pfp_id);
 
-            $query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id) values ('${username}', '${fullname}', ${passwd_id}, '${email}', ${pfp_id})";
+			// Having variables directly inserted into the DB is vulnerable to SQL injection
+            //$query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id) values ('${username}', '${fullname}', ${passwd_id}, '${email}', ${pfp_id})";
+			
+			// Team needs to consider refactoring line 153 (now commented) that looks something like this:
+			
+			$sth = $dbh->prepare('SELECT name, colour, calories
+				FROM fruit
+				WHERE calories < :calories AND colour = :colour');
+			$sth->bindParam(':calories', $calories, PDO::PARAM_INT);
+			$sth->bindParam(':colour', $colour, PDO::PARAM_STR, 12);
+			$sth->execute();
+			// This example won't work and needs further review!!!
+			// Example from https://www.php.net/manual/en/pdostatement.bindparam.php
+			
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
