@@ -1,9 +1,9 @@
 # Senior Project
 ## **CMPS 4910-4928 Group 7**
 
-**Updated: 3/2/21 \ 
+Updated: 3/2/21 \ 
 Instructor: A. Cruz \   
-Created by: Theodore Barcelona** 
+Created by: Theodore Barcelona 
 
 Senior Project: Group-Based Social Media \
 Social Media Website Role: \
@@ -26,4 +26,5 @@ Current things I'm working on:
 
 * Create connection 'connection.php'
 * Create sql database for posts, comments, and friends
+* Create sanitization for the main page
 * Add functionality to the page (php, sql, etc.)
