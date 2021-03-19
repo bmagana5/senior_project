@@ -1,3 +1,13 @@
+:root {
+    --dark: #212426;
+    --medium: #2c3033;
+    --light: #3e4347;
+    --active: #2c3033;
+    --medium-active: #232629;
+    --dark-active: #16181a;
+    --light-hover: #383d41;
+}
+
 body, html {
     height: 100%;
     padding: 0;
@@ -6,7 +16,7 @@ body, html {
 
 body {
     display: flex;
-    background-color: #212426;
+    background-color: var(--dark);
 }
 
 .clearfix {
@@ -14,7 +24,7 @@ body {
 }
 
 .contentfeed {
-    background-color: #3e4347;
+    background-color: var(--light);
     padding: 0;
 }
 
@@ -25,7 +35,7 @@ body {
 
 .friend-filter {
     width: 100%;
-    background-color: #212426;
+    background-color: var(--dark);
     border-radius: .25rem;
     border-style: none;
     outline: none;
@@ -35,7 +45,7 @@ body {
 }
 
 .friend-filter:focus {
-    background-color: #212426;
+    background-color: var(--dark);
     opacity: 0.6;
     color: lightgray;
     box-shadow: none;
@@ -58,11 +68,11 @@ body {
 }
 
 .friend-list-bar {
-    background-color: #2c3033;
+    background-color: var(--medium);
     color: gray;
     border-right-style: groove;
     border-right-width: 1px;
-    border-color: #212426;
+    border-color: var(--dark);
     padding-top: 15px;
     padding-bottom: 15px;
     font-size: 16px;
@@ -83,12 +93,12 @@ body {
 .friend-list-item:hover {
     transform: translateX(7px);
     transition: transform 0.3s;
-    background-color: #383d41;
+    background-color: var(--light-hover);
 }
 
 .friend-list-item.active {
     transform: translateX(7px);
-    background-color: #232629;
+    background-color: var(--medium-active);
 }
 
 .friend-name-container {
@@ -110,7 +120,7 @@ body {
 }
 
 .menu-icon:hover {
-    background-color: #2c3033;
+    background-color: var(--active);
 }
 
 .menu-bar1, .menu-bar2, .menu-bar3 {
@@ -151,7 +161,7 @@ body {
 .message-input-bar {
     width: 93%;
     max-height: 160px; /* this will put a limit on how much the textarea will expand upwards */
-    background-color: #2c3033;
+    background-color: var(--medium);
     border-radius: .25rem;
     outline: none;
     opacity: 0.8;
@@ -164,7 +174,7 @@ body {
 }
 
 .message-input-bar:focus {
-    background-color: #2c3033;
+    background-color: var(--medium);
     opacity: 0.6;
     color: lightgray;
     box-shadow: none;
@@ -197,7 +207,7 @@ body {
 }
 
 .message-submit-button:active {
-    background-color: #2c3033;
+    background-color: var(--active);
     outline: none;
 }
 
@@ -206,12 +216,12 @@ body {
 }
 
 .message-thread {
-    background-color: #3e4347;
+    background-color: var(--light);
     display: none; /* each message thread is hidden until specific friend is chosen */
 }
 
 .message-user-list {
-    background-color: #2c3033;
+    background-color: var(--medium);
 }
 
 .navigation-bar {
@@ -224,7 +234,7 @@ body {
     background-color: inherit;
     border-bottom-style: groove;
     border-bottom-width: 1px;
-    border-color: #212426;
+    border-color: var(--dark);
 }
 
 .navigation-bar-signout {
@@ -243,12 +253,12 @@ body {
 }
 
 .navigation-sign-out-btn:hover {
-    background-color:#2c3033;
+    background-color: var(--active);
     outline: none;
 }
 
 .navigation-sign-out-btn:active {
-    background-color: #16181a;
+    background-color: var(--dark-active);
     outline: none;
 }
 
@@ -276,5 +286,5 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #212426;
+    background: var(--dark);
 }
