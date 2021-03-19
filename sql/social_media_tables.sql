@@ -20,10 +20,10 @@ create table user (
     user_id int(10) unsigned primary key auto_increment, 
     username varchar(64) not null unique,
     full_name varchar(64) not null,
-	user_passwd_id int(10) unsigned not null,
+	user_passwd_id int(10) unsigned not null unique,
     email_address varchar(64) not null unique,
     date_joined timestamp default current_timestamp,
-    pfp_id int unsigned, 
+    pfp_id int unsigned unique, 
     profile_bio text, 
     foreign key(pfp_id) references image(image_id) on delete cascade,
     foreign key(user_passwd_id) references password(pwd_id) on delete cascade

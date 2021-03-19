@@ -3,8 +3,12 @@
     // definition for the Connection class in this file
     final class Connection {
         private static $connection;
-        const USER_DATA_DIR = "img/users/";
+        const USER_DATA_DIR = __DIR__ . "/img/users/";
         const DEFAULT_PFP = "default_database_profile_img.jpg";
+
+        function __destruct() {
+            self::$connection = null;
+        }
 
         // constructor called when object is created
         function __construct($dbconn) {
@@ -14,18 +18,17 @@
             
             if ($_SERVER['REQUEST_METHOD'] == 'POST' && self::$connection) {
 
-                // print_r($_POST);
-                $form_type = self::test_input($_POST['form-type']);
+                $form_type = self::clean_input($_POST['form-type']);
 
                 switch($form_type) {
                     case 'sign-up':
                         // clean and store all of the form data
-                        $username = self::test_input($_POST['username']);
-                        $fullname = self::test_input($_POST['fullname']);
-                        $email = self::test_input($_POST['email']);
-                        $signup_password = self::test_input($_POST['signup-password']);
-                        $passwordconfirm = self::test_input($_POST['passwordconfirm']);
-                        $form_url = self::test_input($_POST['form-url']);
+                        $username = self::clean_input($_POST['username']);
+                        $fullname = self::clean_input($_POST['fullname']);
+                        $email = self::clean_input($_POST['email']);
+                        $signup_password = self::clean_input($_POST['signup-password']);
+                        $passwordconfirm = self::clean_input($_POST['passwordconfirm']);
+                        $form_url = self::clean_input($_POST['form-url']);
 
                         if ($this->checkUserEmailAvailability($username, $email)) {
                             $this->insertUser($username, $fullname, $email, $signup_password);
@@ -38,9 +41,9 @@
                         break;
                     case 'log-in':
                         // clean and store all of the form data
-                        $login_userfield = self::test_input($_POST['login-userfield']);
-                        $login_password = self::test_input($_POST['login-password']);
-                        $form_url = self::test_input($_POST['form-url']);
+                        $login_userfield = self::clean_input($_POST['login-userfield']);
+                        $login_password = self::clean_input($_POST['login-password']);
+                        $form_url = self::clean_input($_POST['form-url']);
 
                         if ($this->getUser($login_userfield, $login_password)) {
                             header('Location: php/home.php');
@@ -54,13 +57,25 @@
                         // this should never be reached, really
                         break;
                 }
+            } else if ($_SESSION['INSERTUSERS'] == $_SESSION['bar']) {
+                $username = self::clean_input($_SESSION['username']);
+                $fullname = self::clean_input($_SESSION['full_name']);
+                $email = self::clean_input($_SESSION['email']);
+                $signup_password = "password";
+                $passwordconfirm = "password";
+                echo "doing stuff: ${username} | ${fullname} | ${email} <br>";
+                if ($this->checkUserEmailAvailability($username, $email)) {
+                    $this->insertUser($username, $fullname, $email, $signup_password);
+                } else {
+                    echo "already exists";
+                }
             } else {
-                $form_url = self::test_input($_POST['form-url']);
+                $form_url = self::clean_input($_POST['form-url']);
                 self::connectionTerminate();
                 session_destroy();
                 header('Location: ' . $form_url);
             }
-            exit();
+            // exit();
         }
 
         private static function connectionInit($dbconn) {
@@ -70,7 +85,6 @@
                     new PDO("mysql:host={$dbconn['servername']};dbname={$dbconn['database']}", $dbconn['username'], $dbconn['password']);
                 // PDO error mode is set to exception
                 self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                // echo "Connection established successfully<br>";
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage() . "<br>";
                 exit();
@@ -84,18 +98,20 @@
          * @return True/False returns true if neither of the provided fields are already in use in the database
          */
         private function checkUserEmailAvailability($username, $email) {
-            $query1 = "call getUsername('${username}')";
-            $query2 = "call getEmailAddress('${email}')";
+            $query1 = "call getUsername(:username)";
+            $query2 = "call getEmailAddress(:email)";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
                 $stmt = self::$connection->prepare($query1);
+                $stmt->bindParam(':username', $username);
                 $stmt->execute();
                 $q1 = $stmt->fetch();
 
                 $stmt = self::$connection->prepare($query2);
+                $stmt->bindParam(':email', $email);
                 $stmt->execute();
                 $q2 = $stmt->fetch();
                 // if any of them exists, return false
@@ -113,13 +129,14 @@
          */
         private function getUser($userfield, $password) {
             // check if user exists in database
-            $query = "call getUserPasswordInfo('${userfield}')";
+            $query = "call getUserPasswordInfo(:userfield)";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
                 $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(':userfield', $userfield);
                 $stmt->execute();
                 $user = $stmt->fetch();
                 if ($user) {
@@ -142,6 +159,7 @@
             $passwd_id = strval($passwd_id);
 
             if (!file_exists(self::USER_DATA_DIR)) {
+                echo self::USER_DATA_DIR;
                 mkdir(self::USER_DATA_DIR);
             }
 
@@ -149,13 +167,19 @@
             $pfp_id = self::createProfilePicture();
             $pfp_id = strval($pfp_id);
 
-            $query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id, profile_bio) values ('${username}', '${fullname}', ${passwd_id}, '${email}', ${pfp_id}, '')";
+            $query = "insert into user (username, full_name, user_passwd_id, email_address, pfp_id, profile_bio) values (:username, :fullname, :passwdId, :email, :pfpId, '')";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
-                self::$connection->exec($query);
+                $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':fullname', $fullname);
+                $stmt->bindParam(':passwdId', $passwd_id);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':pfpId', $pfp_id);
+                $stmt->execute();
             } catch (PDOException $e) {
                 echo "<span style='color: red;'>**${query}**</span>"  . $e->getMessage();
                 exit();
@@ -166,13 +190,15 @@
         }
 
         private function insertPassword($hashed_password) {
-            $query = "insert into password (pwd_hash) values ('${hashed_password}')";
+            $query = "insert into password (pwd_hash) values (:hashedPassword)";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
-                self::$connection->exec($query);
+                $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(':hashedPassword', $hashed_password);
+                $stmt->execute();
             } catch (PDOException $e) {
                 echo "<span style='color: red;'>**${query}**</span> " . $e->getMessage();
                 exit();
@@ -182,13 +208,15 @@
 
         private function createProfilePicture() {
             $pfp_path = "img/" . self::DEFAULT_PFP;
-            $query = "insert into image (image_name) values ('${pfp_path}')";
+            $query = "insert into image (image_name) values (:pfpPath)";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
-                self::$connection->exec($query);
+                $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(':pfpPath', $pfp_path);
+                $stmt->execute();
             } catch (PDOException $e) {
                 echo "<span style='color: red;'>**${query}**</span> " . $e->getMessage();
                 exit();
@@ -201,7 +229,7 @@
          * @param data any piece of user form data submitted in an HTML form
          * @return data a cleaned-up version of the originally submitted data through a user form
          */
-        private static function test_input($data) {
+        private static function clean_input($data) {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
@@ -216,13 +244,14 @@
         }
 
         public static function getFriendsList($user_id) {
-            $query = "call getFriends(${user_id})";
+            $query = "call getFriends(:userId)";
             try {
                 if (self::$connection == NULL) {
                     require 'php/credentials.php';
                     self::connectionInit($dbconn);
                 }
                 $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(':userId', $user_id);
                 $stmt->execute();
                 $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                 $friendlist = $stmt->fetchAll();
@@ -230,6 +259,25 @@
             } catch (PDOException $e) {
                 echo "<div style='color: red;'>**${query}**</div> " . $e->getMessage();
                 exit();
+            }
+        }
+
+        public static function getChatThread($user_id, $friend_id) {
+            $query = "call getChatThread(:userId, :friendId)";
+            try {
+                if (self::$connection == NULL) {
+                    require 'php/credentials.php';
+                    self::connectionInit($dbconn);
+                }
+                $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(":userId", $user_id);
+                $stmt->bindParam(":friendId", $friend_id);
+                $stmt->execute();
+                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $chatthread = $stmt->fetch();
+                return $chatthread;
+            } catch (PDOException $e) {
+
             }
         }
 
@@ -242,7 +290,7 @@
         }
 
         public static function testFunction() {
-            echo "testFunction has been called";
+            echo __DIR__;
         }
     }
 ?>
