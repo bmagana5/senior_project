@@ -86,10 +86,14 @@ function addContent(xmlhttp, userId, elementID) {
     }
 }
 
+function getMessages() {
+
+}
+
 function createChatContent(chatContent) {
     let userId = chatContent.user_id;
     let friend = chatContent.friendContent;
-    let chatThread = chatContent.chatThread;
+    let chatThread = JSON.parse(chatContent.chatThread);
     let threadAreaElement = document.getElementById("thread-area");
     let messageThreadElement = document.createElement("div");
     let messageAreaElement = document.createElement("div");
@@ -100,7 +104,8 @@ function createChatContent(chatContent) {
     let iElement = document.createElement("i");
 
     messageThreadElement.className = "h-100 message-thread";
-    messageThreadElement.id = "message-thread-for-" + friend.username;
+    messageThreadElement.id = "message-thread-" + chatThread.chatthread_id;
+    messageThreadElement.setAttribute("name", "message-thread-for-" + friend.username);
     messageAreaElement.className = "row message-area";
     messageInputSectionElement.className = "input-group message-input-section";
 

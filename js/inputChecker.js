@@ -36,7 +36,8 @@ function filterFriends(inputElement) {
 
 function openChat(event, userId) {
     let chatElement, messageThreads, friendListItems; 
-    chatElement = document.getElementById("message-thread-for-" + userId);
+    chatElement = document.getElementsByName("message-thread-for-" + userId)[0];
+    console.log(chatElement);
 
     // get all message threads and turn off display
     messageThreads = document.getElementsByClassName("message-thread");
@@ -52,7 +53,6 @@ function openChat(event, userId) {
 
     chatElement.style.display = "block";
     event.currentTarget.className += " active";
-
 }
 
 /**
