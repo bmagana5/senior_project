@@ -57,18 +57,6 @@
                         // this should never be reached, really
                         break;
                 }
-            } else if ($_SESSION['INSERTUSERS'] == $_SESSION['bar']) {
-                $username = self::clean_input($_SESSION['username']);
-                $fullname = self::clean_input($_SESSION['full_name']);
-                $email = self::clean_input($_SESSION['email']);
-                $signup_password = "password";
-                $passwordconfirm = "password";
-                echo "doing stuff: ${username} | ${fullname} | ${email} <br>";
-                if ($this->checkUserEmailAvailability($username, $email)) {
-                    $this->insertUser($username, $fullname, $email, $signup_password);
-                } else {
-                    echo "already exists";
-                }
             } else {
                 $form_url = self::clean_input($_POST['form-url']);
                 self::connectionTerminate();
@@ -277,7 +265,25 @@
                 $chatthread = $stmt->fetch();
                 return $chatthread;
             } catch (PDOException $e) {
+                echo "<div style='color: red;'>**${query}**</div> " . $e->getMessage();
+            }
+        }
 
+        public static function getChatMessages($chatthread_id) {
+            $query = "call getChatMessages(:chatThreadId)";
+            try {
+                if (self::$connection == NULL) {
+                    require 'php/credentials.php';
+                    self::connectionInit($dbconn);
+                }
+                $stmt = self::$connection->prepare($query);
+                $stmt->bindParam(":chatThreadId", $chatthread_id);
+                $stmt->execute();
+                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $messages = $stmt->fetchAll();
+                return $messages;
+            } catch (PDOException $e) {
+                echo "<div style='color: red;'>**${query}**</div> " . $e->getMessage();
             }
         }
 

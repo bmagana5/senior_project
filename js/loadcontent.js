@@ -86,8 +86,21 @@ function addContent(xmlhttp, userId, elementID) {
     }
 }
 
-function getMessages() {
-
+async function getMessages(messageArea, userId, chatThreadId) {
+    let promise = new Promise(function(resolve) {
+        let xmlhttp = new XMLHttpRequest();   
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                // we need to send chatthread id off to retrieve all messages in that chat thread
+                resolve(this.responseText);
+            }
+        }     
+        xmlhttp.open("POST", "../php/datafetcher.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("user_id=" + userId + "&chatthread_id=" + chatThreadId);
+    });
+    // now, we wait for promise to return what we need before proceeding
+    createMessages(messageArea, await promise);
 }
 
 function createChatContent(chatContent) {
@@ -126,6 +139,33 @@ function createChatContent(chatContent) {
     messageThreadElement.appendChild(messageAreaElement);
     messageThreadElement.appendChild(messageInputSectionElement);
     threadAreaElement.appendChild(messageThreadElement);
+    getMessages(messageAreaElement, userId, chatThread.chatthread_id);
+}
+
+function createMessages(messageArea, messagesList) {
+    let messages = JSON.parse(messagesList);
+    for (let message of messages) {
+        let messageId = message['message_id']; 
+        let userId = message['user_id'];
+        let userName = message['username'];
+        let fullName = message['full_name'];
+        let imageId = message['image_id']; 
+        let imageName = message['image_name'];
+        let messageBody = message['message_body']; 
+        let messageTime = message['message_time'];
+        let isEdited = message['is_edited'];
+        
+        let container = document.createElement("div");
+        let content = document.createElement("div");
+        let image = document.createElement("img");
+
+        container.className = "chat-message";
+        image.setAttribute("src", format("../{}", imageName));
+        image.className = "chat-message-pfp";
+        container.appendChild(content);
+        content.appendChild(image);
+        messageArea.appendChild(container);
+    }
 }
 
 function format(str) {
