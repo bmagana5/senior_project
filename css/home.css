@@ -20,7 +20,6 @@ body {
 }
 
 .chat-message {
-    display: flex;
     width: 100%;
     padding: 0.4rem 0.4rem;
     margin: 0.3rem 0.3rem 0 0;
@@ -29,23 +28,72 @@ body {
     box-sizing: border-box;
 }
 
+.chat-message .content  {
+    display: flex;
+    flex-direction: row;    
+    width: 100%;
+    max-width: 100%;
+}
+
 .chat-message:hover {
     background-color: var(--light-hover);
 }
 
+.chat-message-body {
+    width: 100%;
+    max-width: 100%;
+    color: gray;
+}
+
+/* we give it right: 0 and position: absolute to make display on the far-right
+of its container. it's container .chat-message-user must have position: relative */
+.chat-message-date {
+    font-size: 1rem;
+    color: gray;
+    font-weight: bolder;
+    font-size: 0.7rem;
+    right: 0;
+    top: 0;
+    position: absolute;
+}
+
 .chat-message-pfp {
-    float: left;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    margin: 0.25rem;
+    margin: 0.25rem 0.25rem 0.25rem 0.5rem;
     user-select: none;
     overflow: hidden;
-    cursor: pointer;
 }
 
-.chat-message div  {
-    max-width: 75%;
+/* we add box-sizing: border-box to make padding be 
+taken into account into its width and height */
+.chat-message-text {
+    width: 85%;
+    max-width: 85%;
+    padding-left: 1.5rem;
+    box-sizing: border-box;
+}
+
+.chat-message-user {
+    width: 100%; /* make it take up full width of its parent container */
+    color: cornflowerblue;
+    font-weight: bold;
+    font-size: 1.1rem;
+    position: relative;
+}
+
+.chat-message-user-link {
+    color: lightgray;
+    font-size: 0.8rem;
+    font-style: italic;
+    user-select: none;
+    text-align: inherit;
+    box-sizing: border-box;
+}
+
+.chat-message-user-link:hover {
+    color: gray;
 }
 
 .clearfix {

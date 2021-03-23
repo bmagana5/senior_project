@@ -65,7 +65,8 @@ delimiter ;
 delimiter //
 create procedure getChatMessages (in ChatID int)
 begin
-	select m.message_id, u.user_id, u.username, u.full_name, i.image_id, i.image_name, m.message_body, m.message_time, m.is_edited
+	select m.message_id, u.user_id, u.username, u.full_name, i.image_id, i.image_name, m.message_body, 
+		date_format(m.message_time, '%d %b \'%y %r') as message_time, m.is_edited
 		from chatthread as c 
 		inner join message as m on c.chatthread_id = m.chatthread_id 
 		inner join user as u on m.message_owner_id = u.user_id

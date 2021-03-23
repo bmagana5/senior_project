@@ -20,7 +20,11 @@ async function getChatThread(userId, friend) {
             if (this.readyState == 4 && this.status == 200) {
                 // we need to send userId, friend info, and chatthread info off
                 // let list = [userId, friend, this.responseText];
-                let list =  { user_id: userId, friendContent: friend, chatThread: this.responseText };
+                let list =  { 
+                                user_id: userId, 
+                                friendContent: friend, 
+                                chatThread: this.responseText 
+                            };
                 resolve(list);
             }
         }     
@@ -158,12 +162,41 @@ function createMessages(messageArea, messagesList) {
         let container = document.createElement("div");
         let content = document.createElement("div");
         let image = document.createElement("img");
+        let messageText = document.createElement("div");
+        let messageDate = document.createElement("div");
+        let userText = document.createElement("div");
+        let messageBodyText = document.createElement("div");
+        let userLink = document.createElement("a");
 
         container.className = "chat-message";
+        container.setAttribute("name", format("mesage-id-{}", messageId));
+        content.className = "content";
+
         image.setAttribute("src", format("../{}", imageName));
+        image.setAttribute("name", format("image-id-{}", imageId));
         image.className = "chat-message-pfp";
-        container.appendChild(content);
+
+        messageText.className = "chat-message-text";
+        messageBodyText.className = "chat-message-body";
+        messageBodyText.innerHTML = messageBody;
+
+        userLink.className = "chat-message-user-link";
+        userLink.href = "#";
+        userLink.setAttribute("name", format("message-owner-id-{}", userId));
+        userLink.innerHTML = format("@{}", userName);
+        userText.innerHTML = format("{} ", fullName);
+        userText.className = "chat-message-user";
+
+        messageDate.innerHTML = messageTime;
+        messageDate.className = "chat-message-date";
+
+        userText.appendChild(userLink);
+        userText.appendChild(messageDate);
+        messageText.appendChild(userText);
+        messageText.appendChild(messageBodyText);
         content.appendChild(image);
+        content.appendChild(messageText);
+        container.appendChild(content);
         messageArea.appendChild(container);
     }
 }
