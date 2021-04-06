@@ -1,0 +1,70 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+form {
+    background-color: white;
+    border-radius: 0.5rem;
+    margin: auto;
+    width: 400px;
+    /* height: 375px; */
+    padding: 20px 15px;
+    user-select: none;
+}
+
+h5 {
+    margin: 0px;
+    text-align: center;
+}
+
+.body {
+    background-color: #ebedf0;
+    padding: 80px 0px 70px; /* top, left&right, bottom */
+    overflow: auto;
+}
+
+.title-header {
+    margin: auto;
+    font-family: 'Yellowtail', cursive;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.btncontainer {
+    margin-top: 1rem;
+}
+
+#submit-btn {
+    background-image: linear-gradient(to right,  rgb(167, 169, 173), rgb(79, 83, 83));
+    border-radius: 0.4rem;
+    color: white;
+    font-size: 14pt;
+    padding: 6px 16px;
+    margin: 0px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.8;
+    outline: none;
+    height: 100%;
+}
+
+#submit-btn:hover {
+    opacity: 0.9;
+    outline: none;
+}
+
+#submit-btn:active {
+    outline: none;
+    opacity: 1.0;
+}
+
+.signup-link {
+    text-align: center;
+    font-size: 10pt;
+}
+
+.footer {
+    height: 60px;
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Join Today! Sign Up Below!</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/signup.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>     
+        <div class="container-fluid header row col-xl-12">
+            <div class="col-6">
+                <h1 id="projectname">Social Media Project</h1>
+            </div>
+            <div class="col-sm-2"><!-- Just a formatting div; nothing more --></div>
+            <div class="col-md-4 mt-2">
+                <!-- Login Form is here -->
+                <form method="post" action="createConnection.php">
+                    <input type="text" name="form-url" value="login.html" hidden>
+                    <input type="text" name="form-type" value="log-in" hidden>
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <div class="form-group">
+                                <label for="login-userfield" class="inline-label">Enter username or email</label>
+                                <input type="text" name="login-userfield" class="form-control shadow-none inline-field" required>    
+                            </div>
+                        </div>
+                        <div class="col-xl-5">
+                            <div class="form-group">
+                                <label for="login-password" class="inline-label">Password</label>
+                                <input type="password" name="login-password" class="form-control shadow-none inline-field" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="form-group">
+                                <button type="submit" class="badge mt-4" id="inline-submit-btn">Log In</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container-fluid body">
+            <!-- Signup From is here -->
+            <form method="post" action="createConnection.php" class="shadow bg-white block needs-validation">
+                <input hidden type="text" name="form-url" value="signup.html">
+                <input type="text" name="form-type" value="sign-up" hidden>
+                <div class="container form-content">
+                    <h2>Sign Up</h2>
+                    <p>It's quick and easy.</p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label for="username"><b>Username</b></label>
+                            <input type="text" id="usernameField" class="form-control shadow-none" placeholder="Enter username" name="username" required>
+                            <div class="valid-feedback">Valid username.</div>
+                            <div class="invalid-feedback">Username not available.</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <label for="fullname"><b>Full Name</b></label>
+                            <input type="text" id="fullnameField" class="form-control shadow-none" placeholder="Enter full name" name="fullname" required>
+                            <div class="valid-feedback">Valid field.</div>
+                            <div class="invalid-feedback">Invalid field.</div> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <label for="email"><b>Email</b></label>
+                            <input type="email" id="emailField" class="form-control shadow-none" placeholder="Enter email address" name="email" required>
+                            <div class="valid-feedback">Valid email address.</div>
+                            <div class="invalid-feedback">Invalid email address.</div> </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-10 form-group">
+                            <label for="signup-password"><b>Password</b></label>
+                            <input type="password" id="passwordField" class="form-control shadow-none" placeholder="Enter password" name="signup-password" required>
+                            <div class="valid-feedback">Valid password.</div>
+                            <div class="invalid-feedback">Invalid password.</div>
+                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10 form-group">
+                            <label for="passwordconfirm"><b>Confirm Password</b></label>
+                            <input type="password" id="confirmpasswordField" class="form-control shadow-none" placeholder="Confirm password" name="passwordconfirm" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 form-group btncontainer">
+                            <button type="submit" id="submitBtn"><b>Sign Up</b></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="footer">
+            <p class='container' style='font-size: 12px;'>
+                Social Media Project &copy; 2020
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="js/signup.js"></script>
+    </body>
+</html>
