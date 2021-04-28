@@ -1,7 +1,7 @@
 # Senior Project
 ## **CMPS 4910-4928 Group 7**
 
-Updated: 3/18/21 \  
+Updated: 4/28/21 \  
 Instructor: A. Cruz \    
 Created by: Theodore Barcelona 
 
@@ -24,6 +24,9 @@ The profile page includes the following:
 
 Current things I'm working on:
 
-* Create sql database for posts, comments, and friends
-* Create sanitization for the main page
-* Add functionality to the page (php, sql, etc.)
+* Create additional databases for other functions (interests, comment posts, groups, friends)
+* Continue sanitization for the page
+* Add any final adjustments to modify the page
+
+Notes:
+* Instead of putting too many php codes, the php function 'comments.inc.php' will handle all the functions instead.
