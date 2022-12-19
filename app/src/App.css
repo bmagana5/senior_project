@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
+
+.login-input-field:focus {
+    box-shadow: .2em -.1em gray;
+}
+
+.login-input-button:hover {
+    opacity: .75;
+}
+
+.login-input-button:active {
+    opacity: .85;
+}
