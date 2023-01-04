@@ -1,0 +1,40 @@
+POST http://localhost:3001/api/login/username
+Content-Type: application/json
+
+{
+    "username": "bmagana5",
+    "password": "password"
+}
+
+###
+POST http://localhost:3001/api/login/email
+Content-Type: application/json
+
+{
+    "email": "maganabrian@rocketmail.com",
+    "password": "password"
+}
+
+###
+POST http://localhost:3001/api/signup/
+Content-Type: application/json
+
+{
+    "username": "testo",
+    "email": "testo@yahoo.com",
+    "name": "Testo Besto",
+    "password": "password123",
+    "confirmPassword": "password123"
+}
+
+###
+POST http://localhost:3001/api/login/username
+Content-Type: application/json
+
+{
+    "username": "testo",
+    "password": "password123"
+}
+
+###
+GET http://localhost:3001/images/users/bigfloppa/profile/bigfloppa.jpg

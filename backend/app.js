@@ -2,25 +2,30 @@ const config = require('./utils/config');
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const router = require('./controllers/router');
-const mysql = require('mysql');
+const mysql = require('mysql2');
+const middleware = require('./utils/middleware');
 
-const con = mysql.createConnection({
+const pool = mysql.createPool({
     host: config.MYSQL_HOST,
     user: config.MYSQL_USER,
-    password: config.MYSQL_PASSWD
-});
-
-con.connect((err) => {
-    if (err) throw err;
-    console.log('mysql connected!');
+    password: config.MYSQL_PASSWD,
+    database: config.MYSQL_DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
 app.use(cors());
 app.use(express.static('build'));
+app.use('/images', express.static('img'));
 app.use(express.json());
+app.use(middleware.requestLogger);
+app.use('/api/signup', require('./controllers/signup')(pool.promise()));
+app.use('/api/login', require('./controllers/login')(pool.promise()));
+app.use('/api/app', require('./controllers/app')(pool.promise()));
 
-app.use('/api/app', router);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 module.exports = app;
 

@@ -31,6 +31,10 @@ homeCopy.php
 BrianM_Work_Log
 mockdata/
 
+# secrets and scratch paper
 .env
 TODO.txt
 /old
+
+# images
+bakcend/img

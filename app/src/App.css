@@ -1,5 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
 
+:root {
+    --dark: #212426;
+    --medium: #2c3033;
+    --light: #3e4347;
+    --active: #2c3033;
+    --medium-active: #232629;
+    --dark-active: #16181a;
+    --light-hover: #383d41;
+}
+
+/* Width of scrollbar */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    opacity: 0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--medium);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--medium-active);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--dark-active);
+}
+
+/*  The following affect the appearance of Login and Signup forms
+    such as changing elements', of the specified class, background color
+*/
 .login-input-field:focus {
     box-shadow: .2em -.1em gray;
 }
@@ -10,4 +46,35 @@
 
 .login-input-button:active {
     opacity: .85;
+}
+
+#friend-filter-input {
+    background-color: var(--dark);
+}
+
+#friend-filter-input:focus {
+    background-color: var(--dark-active);
+}
+
+#sign-out-btn {
+    background-color: var(--light);
+}
+
+#sign-out-btn:hover {
+    background-color: var(--active);
+}
+
+#sign-out-btn:active {
+    background-color: var(--dark-active);
+}
+
+.friend-list-item:hover {
+    transform: translateX(4px);
+    transition: transform 0.15s;
+    background-color: var(--light-hover);
+}
+
+.friend-list-item:active {
+    transform: translateX(4px) translateY(2px);
+    background-color: var(--medium-active);
 }
