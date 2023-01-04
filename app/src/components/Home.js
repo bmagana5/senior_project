@@ -51,7 +51,6 @@ const Home = ({ logout, ...props }) => {
     const friendStatusList = {
         backgroundColor: 'var(--medium)',
     };
-    console.log(props.children)
 
     return (
         <div className="d-flex h-100">

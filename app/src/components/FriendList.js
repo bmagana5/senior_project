@@ -1,12 +1,12 @@
-const FriendList = ({ friendList }) => {
+const FriendList = ({ friendList, openChat }) => {
     return (
         <div className="d-flex flex-column w-100" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-            {friendList.map(friend => <FriendItem key={friend.user_id} friendItem={friend}/>)}
+            {friendList.map(friend => <FriendItem key={friend.user_id} friendItem={friend} openChat={openChat}/>)}
         </div>
     );
 };
 
-const FriendItem = ({ friendItem }) => {
+const FriendItem = ({ friendItem, openChat }) => {
     const listItemContainer = {
         cursor: 'pointer'
     };
@@ -26,7 +26,7 @@ const FriendItem = ({ friendItem }) => {
     };
 
     return (
-        <div className="mb-2 p-1 d-flex align-items-center friend-list-item" style={listItemContainer} id={friendItem.username} onClick={null/*openChat callback goes here*/}>
+        <div className="mb-2 p-1 d-flex align-items-center friend-list-item" style={listItemContainer} id={friendItem.username} onClick={() => openChat(friendItem.username)}>
             <img className="friend-image me-2" style={imageStyling} src={friendItem.image_name}></img>
             <div className="d-flex flex-column justify-content-center overflow-hidden">
                 <div className="friend-username" style={nameContainerStyle} name={friendItem.username}>

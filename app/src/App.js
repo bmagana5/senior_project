@@ -7,7 +7,7 @@ import Signup from "./components/Signup";
 import { useEffect, useState } from "react";
 import Home from './components/Home';
 import FriendList from './components/FriendList';
-import { FeedArea, Chat } from './components/FeedArea';
+import { FeedArea, FriendChat } from './components/FeedArea';
 
 
 function App() {
@@ -20,7 +20,9 @@ function App() {
   const [errorMessage, setErrorMessage]                 = useState('');
   const [user, setUser]                                 = useState(null);
   const [friendList, setFriendList]                     = useState([]);
-  const [activeChat, setActiveChat] = useState('');
+  const [activeFriendChat, setActiveFriendChat]         = useState('');     // tracks which friend chat should be opened
+  const [activeFriendChatData, setActiveFriendChatData]         = useState(null);
+  const [chatList, setChatList]                         = useState([]);     // keeps track of chat thread id, mesages in a direct messaging chat between friends
 
   // effect that adds an event listener to each form in the app
   // useEffect(() => {
@@ -78,6 +80,34 @@ function App() {
     }
   });
   
+  useEffect(() => {
+    // check if activeChat changes
+    // if so, check if chat data has been retrieved and placed in chatList
+    if (friendList.length > 0) {
+      const friend = friendList.find(friend => friend.username === activeFriendChat);
+      const cachedChatData = chatList.find(chatThread => chatThread.friend === activeFriendChat);
+      if (cachedChatData) {
+        setActiveFriendChatData(cachedChatData);
+      } else if (friend) {
+        // if not already there, retrieve from database asynchronously
+        contentService.getChatThread(friend.user_id).then((chatThread) => {
+          // console.log('retrieving chatThread from server: ', chatThread);
+          setChatList(chatList.concat({ 
+            id: chatThread.id, 
+            name: chatThread.name, 
+            friend: friend.username, 
+            messages: chatThread.messages
+          }));
+        }).catch((error) => {
+          console.log('ERROR while retrieving chat thread or messages: ', error);
+        });
+      }
+    }
+  }, [activeFriendChat]);
+
+  useEffect(() => {
+    chatList.length > 0 && setActiveFriendChatData(chatList[chatList.length - 1]);
+  }, [chatList]);
   
   const validateForm = (event) => {
     event.preventDefault();
@@ -210,6 +240,14 @@ function App() {
     setConfirmPasswordField('');
   };
 
+  const openChat = (username) => {
+    if (activeFriendChat !== username) {
+      setActiveFriendChat(username);
+    } else {
+      setActiveFriendChat('');
+    }
+  };
+
   // this returns the appropriate React component for corresponding user form
   const userForm = () => (
     <>
@@ -251,8 +289,10 @@ function App() {
   const homeElements = () => {
     return (
       <Home logout={logout}>
-        <FriendList key="FriendList" friendList={friendList}></FriendList>
-        <FeedArea key="FeedArea"></FeedArea>
+        <FriendList key="FriendList" friendList={friendList} openChat={openChat}></FriendList>
+        <FeedArea key="FeedArea">
+          { activeFriendChatData ? <FriendChat friendChatData={activeFriendChat}/> : null}
+        </FeedArea>
       </Home>
     );
   };

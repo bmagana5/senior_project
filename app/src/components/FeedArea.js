@@ -6,12 +6,12 @@ const FeedArea = (props) => {
     );
 };
 
-const Chat = () => {
+const FriendChat = ({ friendChatData }) => {
     return (
         <div>
-
+            mushroom kingdom, here I come!
         </div>
     )
 };
 
-export { FeedArea, Chat };
+export { FeedArea, FriendChat };

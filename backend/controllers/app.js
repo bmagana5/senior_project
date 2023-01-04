@@ -38,8 +38,31 @@ module.exports = (promisePool) => {
     });
 
     // get chat thread between current user and their friend using ids
-    appRouter.post('chat-thread', async (request, response, next) => {
+    // VALIDATE & SANITIZE THE BODY's friendId!!!
+    appRouter.post('/chat-thread', async (request, response, next) => {
+        try {
+            const tokenDecoded = getDecodedToken(request);
+            if (!(tokenDecoded && tokenDecoded.id)) {
+                return response.status(401).json({
+                    error: 'Token is missing or invalid'
+                });
+            }
 
+            const [chatThreadResult, chatThreadFields] = await promisePool.execute('call getChatThread(?, ?)', [tokenDecoded.id, request.body.friendId]);
+
+            let chatResponse = { 
+                id: chatThreadResult[0][0].chatthread_id,
+                name: chatThreadResult[0][0].chatthread_name,
+            };
+
+            const [messagesResult, messagesFields] = await promisePool.execute('call getChatMessages(?)', [chatResponse.id]);
+            // console.log(messagesResult[0]);
+            chatResponse.messages = messagesResult[0];
+
+            return response.json(chatResponse);
+        } catch (error) {
+            next(error);
+        }
     });
 
     return appRouter;
