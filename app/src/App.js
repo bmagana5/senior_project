@@ -21,8 +21,9 @@ function App() {
   const [user, setUser]                                 = useState(null);
   const [friendList, setFriendList]                     = useState([]);
   const [activeFriendChat, setActiveFriendChat]         = useState('');     // tracks which friend chat should be opened
-  const [activeFriendChatData, setActiveFriendChatData]         = useState(null);
+  const [activeFriendChatData, setActiveFriendChatData] = useState(null);
   const [chatList, setChatList]                         = useState([]);     // keeps track of chat thread id, mesages in a direct messaging chat between friends
+  const [friendMessageBuffer, setFriendMessageBuffer]   = useState({});
 
   // effect that adds an event listener to each form in the app
   // useEffect(() => {
@@ -98,9 +99,28 @@ function App() {
             friend: friend.username, 
             messages: chatThread.messages
           }));
-        }).catch((error) => {
+          let tmpObj = {...friendMessageBuffer};
+          tmpObj[friend.username] = '';
+          setFriendMessageBuffer({...tmpObj})
+        }).catch((errorObj) => {
+          const error = errorObj.response.data;
           console.log('ERROR while retrieving chat thread or messages: ', error);
+          if (error.name && error.name === 'TokenExpiredError') {
+            setErrorMessage(`Session timed out: ${error.error}. Please log in again.`);
+            setTimeout(() => {
+              clearErrorMessage();
+            }, 10000);
+            logout();
+          } else if (error.error && error.error.toLowerCase().includes('token')) {
+            setErrorMessage(`An error has occurred: ${error.error}`);
+            setTimeout(() => {
+              clearErrorMessage();
+            }, 10000);
+            logout();
+          } 
         });
+      } else {
+        setActiveFriendChatData(null);
       }
     }
   }, [activeFriendChat]);
@@ -248,6 +268,14 @@ function App() {
     }
   };
 
+  // takes in the event, gets the current value of the <input> element
+  // ...and updates the message buffer for the appropriate friend
+  const captureFriendMessageInput = (event) => {
+    let tmpObj = {...friendMessageBuffer};
+    tmpObj[activeFriendChat] = event.target.value;
+    setFriendMessageBuffer(tmpObj);
+  }
+
   // this returns the appropriate React component for corresponding user form
   const userForm = () => (
     <>
@@ -291,7 +319,11 @@ function App() {
       <Home logout={logout}>
         <FriendList key="FriendList" friendList={friendList} openChat={openChat}></FriendList>
         <FeedArea key="FeedArea">
-          { activeFriendChatData ? <FriendChat friendChatData={activeFriendChat}/> : null}
+          { activeFriendChatData 
+            ? <FriendChat friendChatData={activeFriendChatData} 
+              messageBuffer={friendMessageBuffer[activeFriendChatData.friend]}
+              captureFriendMessageInput={captureFriendMessageInput}/> 
+            : null}
         </FeedArea>
       </Home>
     );

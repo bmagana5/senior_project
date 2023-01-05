@@ -78,3 +78,47 @@
     transform: translateX(4px) translateY(2px);
     background-color: var(--medium-active);
 }
+
+.chat-message:hover {
+    background-color: var(--light-hover);
+}
+
+.chat-message-user-link:hover {
+    color: lightskyblue;
+}
+
+.message-input-bar {
+    background-color: var(--medium);
+}
+
+.message-input-bar:focus {
+    background-color: var(--medium-active);
+}
+
+.message-submit-button {
+    color: gray;
+    background-color: var(--light);
+    transition: transform 0.15s;
+    border: none;
+    outline: none;
+}
+
+/* use this for the disabled submit message button for friend chat threads */
+.message-submit-button-disabled {
+    color: gray;
+    background-color: var(--light);
+    opacity: 0.5;
+    transition: transform 0.15s;
+    border: none;
+    outline: none;
+}
+
+.message-submit-button:hover {
+    color: gray;
+    background-color: var(--light-hover);
+}
+
+.message-submit-button:active {
+    transform: translateY(1px);
+    background-color: var(--medium);
+}

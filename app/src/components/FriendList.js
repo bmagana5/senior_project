@@ -27,7 +27,7 @@ const FriendItem = ({ friendItem, openChat }) => {
 
     return (
         <div className="mb-2 p-1 d-flex align-items-center friend-list-item" style={listItemContainer} id={friendItem.username} onClick={() => openChat(friendItem.username)}>
-            <img className="friend-image me-2" style={imageStyling} src={friendItem.image_name}></img>
+            <img className="friend-image me-2" style={imageStyling} src={friendItem.image_name} alt={friendItem.username}></img>
             <div className="d-flex flex-column justify-content-center overflow-hidden">
                 <div className="friend-username" style={nameContainerStyle} name={friendItem.username}>
                     @{friendItem.username}

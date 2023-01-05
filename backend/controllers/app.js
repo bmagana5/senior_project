@@ -57,8 +57,13 @@ module.exports = (promisePool) => {
 
             const [messagesResult, messagesFields] = await promisePool.execute('call getChatMessages(?)', [chatResponse.id]);
             // console.log(messagesResult[0]);
-            chatResponse.messages = messagesResult[0];
-
+            chatResponse.messages = messagesResult[0].map(message => {
+                return {
+                    ...message, 
+                    image_name: message.image_name.replace('img', `http://${request.get('host')}/images`)
+                }
+            });
+            // console.log(chatResponse);
             return response.json(chatResponse);
         } catch (error) {
             next(error);
