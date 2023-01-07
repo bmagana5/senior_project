@@ -28,18 +28,24 @@ const getConfig = () => {
 const getFriendsList = async () => {
     const response = await axios.post(`${baseUrl}/friends-list`, undefined, getConfig());
     return response.data;
-}
+};
 
 const getChatThread = async (friendId) => {
     const response = await axios.post(`${baseUrl}/chat-thread`, {friendId: friendId}, getConfig());
     return response.data;
-}
+};
+
+const submitChatMessage = async (messageData) => {
+    const response = await axios.post(`${baseUrl}/create-new-message`, messageData, getConfig());
+    return response.data;
+};
 
 const contentService = {
     setToken,
     clearToken,
     getFriendsList,
-    getChatThread
+    getChatThread,
+    submitChatMessage
 };
 
 export default contentService;

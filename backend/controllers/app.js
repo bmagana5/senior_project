@@ -56,15 +56,39 @@ module.exports = (promisePool) => {
             };
 
             const [messagesResult, messagesFields] = await promisePool.execute('call getChatMessages(?)', [chatResponse.id]);
-            // console.log(messagesResult[0]);
+            
             chatResponse.messages = messagesResult[0].map(message => {
                 return {
                     ...message, 
                     image_name: message.image_name.replace('img', `http://${request.get('host')}/images`)
                 }
             });
+            
             // console.log(chatResponse);
             return response.json(chatResponse);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    appRouter.post('/create-new-message', async (request, response, next) => {
+        try {
+            const tokenDecoded = getDecodedToken(request);
+            if (!(tokenDecoded && tokenDecoded.id)) {
+                return response.status(401).json({
+                    error: 'Token is missing or invalid'
+                });
+            }
+
+            const [insertMessageResult] = await promisePool.execute('insert into message (message_owner_id, chatthread_id, message_body) values (?, ?, ?)', [tokenDecoded.id, request.body.chatthread_id, request.body.message_body])
+            const [newMessageResult, newMessageFields] = await promisePool.execute('call getChatMessage(?)', [insertMessageResult.insertId]);
+            console.log(newMessageResult[0][0]);
+            let newMessage = {
+                ...newMessageResult[0][0], 
+                image_name: newMessageResult[0][0].image_name.replace('img', `http://${request.get('host')}/images`)
+            }
+            request.io.in(`chat-room-${request.body.chatthread_id}`).emit('new-friend-chat-message', newMessage);
+            return response.json(newMessage);
         } catch (error) {
             next(error);
         }

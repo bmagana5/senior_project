@@ -1,30 +1,42 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
+import { io } from 'socket.io-client';
 import loginService from './services/loginService';
 import signupService from './services/signupService';
 import contentService from './services/contentService';
 import Login from  "./components/Login";
 import Signup from "./components/Signup";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Home from './components/Home';
 import FriendList from './components/FriendList';
 import { FeedArea, FriendChat } from './components/FeedArea';
 
 
 function App() {
-  const [loginSignupToggle, setLoginSignupToggle]       = useState(true);
-  const [usernameField, setUsernameField]               = useState('');
-  const [fullNameField, setFullNameField]               = useState('');
-  const [emailField, setEmailField]                     = useState('');
-  const [passwordField, setPasswordField]               = useState('');
-  const [confirmPasswordField, setConfirmPasswordField] = useState('');
-  const [errorMessage, setErrorMessage]                 = useState('');
-  const [user, setUser]                                 = useState(null);
-  const [friendList, setFriendList]                     = useState([]);
-  const [activeFriendChat, setActiveFriendChat]         = useState('');     // tracks which friend chat should be opened
-  const [activeFriendChatData, setActiveFriendChatData] = useState(null);
-  const [chatList, setChatList]                         = useState([]);     // keeps track of chat thread id, mesages in a direct messaging chat between friends
-  const [friendMessageBuffer, setFriendMessageBuffer]   = useState({});
-
+  const [loginSignupToggle, setLoginSignupToggle]           = useState(true);
+  const [usernameField, setUsernameField]                   = useState('');
+  const [fullNameField, setFullNameField]                   = useState('');
+  const [emailField, setEmailField]                         = useState('');
+  const [passwordField, setPasswordField]                   = useState('');
+  const [confirmPasswordField, setConfirmPasswordField]     = useState('');
+  const [errorMessage, setErrorMessage]                     = useState('');
+  const [user, setUser]                                     = useState(null);
+  const [friendList, setFriendList]                         = useState([]);
+  const [activeFriendChat, setActiveFriendChat]             = useState('');     // tracks which friend chat should be opened
+  const [activeFriendChatData, _setActiveFriendChatData]    = useState(null);
+  const activeFriendChatDataRef                             = useRef(activeFriendChatData);
+  const setActiveFriendChatData = (data) => {
+    activeFriendChatDataRef.current = data;
+    _setActiveFriendChatData(data);
+  };
+  const [chatList, _setChatList]                            = useState([]);     // keeps track of chat thread id, mesages in a direct messaging chat between friends
+  const chatListRef                                         = useRef(chatList);
+  const setChatList = (data) => {
+    chatListRef.current = data;
+    _setChatList(data);
+  };
+  const [friendMessageBuffer, setFriendMessageBuffer]       = useState({});
+  const [socket, setSocket]                                 = useState(null);
   // effect that adds an event listener to each form in the app
   // useEffect(() => {
   //   const forms = document.querySelectorAll('.needs-validation');
@@ -41,7 +53,32 @@ function App() {
   //     }, false);
   //   });
   // }, []);
-  
+ 
+  useEffect(() => {
+    // when user exists, create socket and connect to server
+    user 
+      ? socket === null && connectSocket()
+      : socket && disconnectSocket(null);
+  }, [user]);
+
+  // connects client to the server via socket
+  const connectSocket = () => {
+    let newSocket = io.connect('http://localhost:3001');
+    // server will emit new chat messages out to all clients subscribed to specific chat threads
+    newSocket.on("new-friend-chat-message", (newMessage) => {
+      let tmpChat = chatListRef.current.find(chat => chat.friend === activeFriendChatDataRef.current.friend);
+      tmpChat.messages.push(newMessage);
+      setChatList(chatListRef.current.map(chat => chat.id === newMessage.chatthread_id ? tmpChat : chat));
+    });
+    setSocket(newSocket);
+  };
+
+  // socket disconnects from server and socket is destroyed
+  const disconnectSocket = () => {
+    socket.disconnect();
+    setSocket(null);
+  };
+
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('loggedInUser');
     if (loggedInUser) {
@@ -82,17 +119,18 @@ function App() {
   });
   
   useEffect(() => {
-    // check if activeChat changes
+    // check if activeFriendChat changes
     // if so, check if chat data has been retrieved and placed in chatList
     if (friendList.length > 0) {
       const friend = friendList.find(friend => friend.username === activeFriendChat);
       const cachedChatData = chatList.find(chatThread => chatThread.friend === activeFriendChat);
       if (cachedChatData) {
+        socket.emit("join-chat-room", cachedChatData.id, user.username);
         setActiveFriendChatData(cachedChatData);
       } else if (friend) {
         // if not already there, retrieve from database asynchronously
         contentService.getChatThread(friend.user_id).then((chatThread) => {
-          // console.log('retrieving chatThread from server: ', chatThread);
+          socket.emit("join-chat-room", chatThread.id, user.username);
           setChatList(chatList.concat({ 
             id: chatThread.id, 
             name: chatThread.name, 
@@ -101,7 +139,7 @@ function App() {
           }));
           let tmpObj = {...friendMessageBuffer};
           tmpObj[friend.username] = '';
-          setFriendMessageBuffer({...tmpObj})
+          setFriendMessageBuffer(tmpObj);
         }).catch((errorObj) => {
           const error = errorObj.response.data;
           console.log('ERROR while retrieving chat thread or messages: ', error);
@@ -125,8 +163,9 @@ function App() {
     }
   }, [activeFriendChat]);
 
+  // if there are cached friend chat threads, grab the correct one based on the friend username the activeFriendChat tracker is set to
   useEffect(() => {
-    chatList.length > 0 && setActiveFriendChatData(chatList[chatList.length - 1]);
+    chatList.length > 0 && setActiveFriendChatData(chatList.find(chat => chat.friend === activeFriendChat));
   }, [chatList]);
   
   const validateForm = (event) => {
@@ -193,8 +232,15 @@ function App() {
     }
   };
   
+  // clear all data out when logging out
   const logout = () => {
     window.localStorage.clear();
+    setFriendList([]);
+    setActiveFriendChat('');  
+    setActiveFriendChatData(null);
+    setChatList([]);  
+    setFriendMessageBuffer({});
+    setSocket(null);
     setUser(null);
   };
 
@@ -274,7 +320,39 @@ function App() {
     let tmpObj = {...friendMessageBuffer};
     tmpObj[activeFriendChat] = event.target.value;
     setFriendMessageBuffer(tmpObj);
-  }
+  };
+
+  const checkForSubmitKey = (event) => {
+    if (['Enter'].includes(event.key)){
+      console.log(event);
+      submitFriendChatMessage();
+    }
+  };
+
+  const clearFriendMessageInput = () => {
+    let tmpObj = {...friendMessageBuffer};
+    tmpObj[activeFriendChat] = '';
+    setFriendMessageBuffer(tmpObj);
+  };
+
+  const submitFriendChatMessage = async () => {
+    // need: user_id, chatthread_id, message_body
+    // user id comes from webtoken, so use that!
+    console.log({ chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat]})
+    try {
+      const newMessage = await contentService.submitChatMessage({ chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat]});
+      let tmpChat = chatList.find(chat => chat.id === newMessage.chatthread_id);
+      tmpChat.messages.push(newMessage);
+      clearFriendMessageInput();
+      setChatList(chatList.map(chat => chat.id === newMessage.chatthread_id ? tmpChat : chat));
+    } catch (error) {
+      setErrorMessage(`Session timed out: ${error}. Please log in again.`);
+      setTimeout(() => {
+        clearErrorMessage();
+      }, 10000);
+    }
+  
+  };
 
   // this returns the appropriate React component for corresponding user form
   const userForm = () => (
@@ -320,9 +398,12 @@ function App() {
         <FriendList key="FriendList" friendList={friendList} openChat={openChat}></FriendList>
         <FeedArea key="FeedArea">
           { activeFriendChatData 
-            ? <FriendChat friendChatData={activeFriendChatData} 
+            ? <FriendChat friendChatData={activeFriendChatData}
+              friendProfilePicture={friendList.find(friend => friend.username === activeFriendChatData.friend).image_name}
               messageBuffer={friendMessageBuffer[activeFriendChatData.friend]}
-              captureFriendMessageInput={captureFriendMessageInput}/> 
+              captureFriendMessageInput={captureFriendMessageInput}
+              submitMessage={submitFriendChatMessage}
+              checkForSubmitKey={checkForSubmitKey}/> 
             : null}
         </FeedArea>
       </Home>
