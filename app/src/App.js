@@ -22,6 +22,10 @@ function App() {
   const [errorMessage, setErrorMessage]                     = useState('');
   const [user, setUser]                                     = useState(null);
   const [friendList, setFriendList]                         = useState([]);
+  const isFriendListRetrieved                               = useRef(false);
+  const setIsFriendListRetrieved = (value) => {
+    isFriendListRetrieved.current = value;
+  };
   const [activeFriendChat, setActiveFriendChat]             = useState('');     // tracks which friend chat should be opened
   const [activeFriendChatData, _setActiveFriendChatData]    = useState(null);
   const activeFriendChatDataRef                             = useRef(activeFriendChatData);
@@ -55,13 +59,14 @@ function App() {
   // }, []);
  
   useEffect(() => {
-    // when user exists, create socket and connect to server
+    // responsible for socket connection. dependent on user object
     user 
       ? socket === null && connectSocket()
       : socket && disconnectSocket(null);
   }, [user]);
 
-  // connects client to the server via socket
+  // the function connects user client to the server via socket
+  // also defines how specific events received from the server will be handled.
   const connectSocket = () => {
     let newSocket = io.connect('http://localhost:3001');
     // server will emit new chat messages out to all clients subscribed to specific chat threads
@@ -73,12 +78,12 @@ function App() {
     setSocket(newSocket);
   };
 
-  // socket disconnects from server and socket is destroyed
   const disconnectSocket = () => {
     socket.disconnect();
     setSocket(null);
   };
 
+  // checks if there is valid user credentials saved on localStorage to use to automatically log in user
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('loggedInUser');
     if (loggedInUser) {
@@ -89,9 +94,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (user && friendList.length === 0) {
+    if (user && !isFriendListRetrieved.current) {
       // retrieve list of friends
       contentService.getFriendsList().then((friends) => {
+        setIsFriendListRetrieved(true);
         setFriendList(friends);
         console.log(friends);
       }).catch((errorObj) => {
@@ -113,15 +119,16 @@ function App() {
           setTimeout(() => {
             clearErrorMessage();
           }, 10000);
+          logout();
         }
       });
     }
-  });
+  }, [user]);
   
   useEffect(() => {
     // check if activeFriendChat changes
     // if so, check if chat data has been retrieved and placed in chatList
-    if (friendList.length > 0) {
+    if (isFriendListRetrieved) {
       const friend = friendList.find(friend => friend.username === activeFriendChat);
       const cachedChatData = chatList.find(chatThread => chatThread.friend === activeFriendChat);
       if (cachedChatData) {
@@ -236,11 +243,12 @@ function App() {
   const logout = () => {
     window.localStorage.clear();
     setFriendList([]);
+    setIsFriendListRetrieved(false);
     setActiveFriendChat('');  
     setActiveFriendChatData(null);
     setChatList([]);  
     setFriendMessageBuffer({});
-    setSocket(null);
+    disconnectSocket();
     setUser(null);
   };
 
@@ -324,7 +332,6 @@ function App() {
 
   const checkForSubmitKey = (event) => {
     if (['Enter'].includes(event.key)){
-      console.log(event);
       submitFriendChatMessage();
     }
   };
@@ -332,16 +339,17 @@ function App() {
   const clearFriendMessageInput = () => {
     let tmpObj = {...friendMessageBuffer};
     tmpObj[activeFriendChat] = '';
+    document.getElementById(`chatthread-input-for-${activeFriendChatData.friend}`).value = '';
     setFriendMessageBuffer(tmpObj);
   };
 
   const submitFriendChatMessage = async () => {
     // need: user_id, chatthread_id, message_body
     // user id comes from webtoken, so use that!
-    console.log({ chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat]})
+    // console.log('submitting: ', { chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat]})
     try {
-      const newMessage = await contentService.submitChatMessage({ chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat]});
-      let tmpChat = chatList.find(chat => chat.id === newMessage.chatthread_id);
+      const newMessage = await contentService.submitChatMessage({ chatthread_id: activeFriendChatData.id, message_body: friendMessageBuffer[activeFriendChat], socket_id: socket.id});
+      let tmpChat = chatList.find(chat => chat.friend === activeFriendChatData.friend);
       tmpChat.messages.push(newMessage);
       clearFriendMessageInput();
       setChatList(chatList.map(chat => chat.id === newMessage.chatthread_id ? tmpChat : chat));
@@ -350,6 +358,7 @@ function App() {
       setTimeout(() => {
         clearErrorMessage();
       }, 10000);
+      logout();
     }
   
   };

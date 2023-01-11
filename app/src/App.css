@@ -79,6 +79,8 @@
     background-color: var(--medium-active);
 }
 
+/* styling for chat thread message input and submit button */
+
 .chat-message:hover {
     background-color: var(--light-hover);
 }
@@ -121,4 +123,56 @@
 .message-submit-button:active {
     transform: translateY(1px);
     background-color: var(--medium);
+}
+
+/* chat message options button group with the smiley face, pen, and three dots */
+
+.chat-message-options-button {
+    background-color: var(--light);
+    transition: 0.1s;
+}
+
+.chat-message-options-button:hover {
+    background-color: var(--light-hover);
+}
+
+.chat-message-options-button:active {
+    background-color: var(--medium);
+    transform: translateY(1px);
+}
+
+/*  the following will define styling, positioning, transitions for elements 
+    that will have a tooltip and its respective text */
+
+.tooltip-target {
+    position: relative;
+}
+
+.tooltip-target .tooltiptext {
+    display: none;
+    background-color: var(--dark);
+
+    /* tooltip text position */
+    z-index: 7;
+
+    /* tooltip fade in */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* this is for the tooltips triangle that points down to the parent button */
+.tooltip-target .tooltiptext::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: var(--dark) transparent transparent transparent;
+}
+
+.tooltip-target:hover .tooltiptext {
+    display: inline;
+    opacity: 1;
 }

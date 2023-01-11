@@ -82,12 +82,24 @@ module.exports = (promisePool) => {
 
             const [insertMessageResult] = await promisePool.execute('insert into message (message_owner_id, chatthread_id, message_body) values (?, ?, ?)', [tokenDecoded.id, request.body.chatthread_id, request.body.message_body])
             const [newMessageResult, newMessageFields] = await promisePool.execute('call getChatMessage(?)', [insertMessageResult.insertId]);
-            console.log(newMessageResult[0][0]);
             let newMessage = {
                 ...newMessageResult[0][0], 
                 image_name: newMessageResult[0][0].image_name.replace('img', `http://${request.get('host')}/images`)
             }
-            request.io.in(`chat-room-${request.body.chatthread_id}`).emit('new-friend-chat-message', newMessage);
+            
+            // console.log(newMessageResult[0][0]);
+            // console.log('from socket: ', request.body.socket_id);
+            // console.log(request.io.in(`chat-room-${request.body.chatthread_id}`).adapter.nsp.sockets);
+
+            // request obj has socket id of user who sends message
+            // we'll check all other sockets other than the sending user's socket and send the new message.
+            // the saved message will be returned to the sender via response object; all other logged in users will receive via socket
+            for (let [key, socket] of request.io.in(`chat-room-${request.body.chatthread_id}`).adapter.nsp.sockets) {
+                if (request.body.socket_id !== key) {
+                    socket.emit('new-friend-chat-message', newMessage);
+                }
+            }
+            // request.io.in(`chat-room-${request.body.chatthread_id}`).emit('new-friend-chat-message', newMessage);
             return response.json(newMessage);
         } catch (error) {
             next(error);
