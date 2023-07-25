@@ -33,6 +33,89 @@
     background: var(--dark-active);
 }
 
+/* negative margin classes */
+
+.mt-n1 {
+    margin-top: -.25rem!important;
+}
+
+.me-n1 {
+    margin-right: -.25rem!important;
+}
+
+.mb-n1 {
+    margin-bottom: -.25rem!important;
+}
+
+.ms-n1 {
+    margin-left: -.25rem!important;
+}
+
+.mt-n2 {
+    margin-top: -.5rem!important;
+}
+
+.me-n2 {
+    margin-right: -.5rem!important;
+}
+
+.mb-n2 {
+    margin-bottom: -.5rem!important;
+}
+
+.ms-n2 {
+    margin-left: -.5rem!important;
+}
+
+.mt-n3 {
+    margin-top: -1rem!important;
+}
+
+.me-n3 {
+    margin-right: -1rem!important;
+}
+
+.mb-n3 {
+    margin-bottom: -1rem!important;
+}
+
+.ms-n3 {
+    margin-left: -1rem!important;
+}
+
+.mt-n4 {
+    margin-top : -1.5rem!important;
+}
+
+.me-n4 {
+    margin-right : -1.5rem!important;
+}
+
+.mb-n4 {
+    margin-bottom : -1.5rem!important;
+}
+
+.ms-n4 {
+    margin-left : -1.5rem!important;
+}
+
+.mt-n5 {
+    margin-top : -3rem!important;
+}
+
+.me-n5 {
+    margin-right : -3rem!important;
+}
+
+.mb-n5 {
+    margin-bottom : -3rem!important;
+}
+
+.ms-n5 {
+    margin-left : -3rem!important;
+}
+
+
 /*  The following affect the appearance of Login and Signup forms
     such as changing elements', of the specified class, background color
 */
@@ -144,16 +227,10 @@
 /*  the following will define styling, positioning, transitions for elements 
     that will have a tooltip and its respective text */
 
-.tooltip-target {
-    position: relative;
-}
 
-.tooltip-target .tooltiptext {
+.tooltip-target .tooltiptext, .tooltiptext-end {
     display: none;
     background-color: var(--dark);
-
-    /* tooltip text position */
-    z-index: 7;
 
     /* tooltip fade in */
     opacity: 0;
@@ -172,7 +249,18 @@
     border-color: var(--dark) transparent transparent transparent;
 }
 
-.tooltip-target:hover .tooltiptext {
+.tooltip-target:hover .tooltiptext, .tooltip-target:hover .tooltiptext-end {
     display: inline;
     opacity: 1;
+}
+
+.tooltip-target .tooltiptext-end::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    margin-left: -20px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: var(--dark) transparent transparent transparent;
 }

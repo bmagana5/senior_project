@@ -1,11 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import { io } from 'socket.io-client';
-import loginService from './services/loginService';
-import signupService from './services/signupService';
 import contentService from './services/contentService';
-import Login from  "./components/Login";
-import Signup from "./components/Signup";
+import Signup from "./components/sign-up-form/sign-up-form.component";  
 import { useEffect, useRef, useState } from "react";
 import Home from './components/Home';
 import FriendList from './components/FriendList';
@@ -13,34 +10,29 @@ import { FeedArea, FriendChat } from './components/FeedArea';
 
 
 function App() {
-  const [loginSignupToggle, setLoginSignupToggle]           = useState(true);
-  const [usernameField, setUsernameField]                   = useState('');
-  const [fullNameField, setFullNameField]                   = useState('');
-  const [emailField, setEmailField]                         = useState('');
-  const [passwordField, setPasswordField]                   = useState('');
-  const [confirmPasswordField, setConfirmPasswordField]     = useState('');
   const [errorMessage, setErrorMessage]                     = useState('');
   const [user, setUser]                                     = useState(null);
   const [friendList, setFriendList]                         = useState([]);
-  const isFriendListRetrieved                               = useRef(false);
+  const isFriendListRetrieved                               = useRef(false);                // flag to check if friends' list has been retrieved from server
   const setIsFriendListRetrieved = (value) => {
     isFriendListRetrieved.current = value;
   };
-  const [activeFriendChat, setActiveFriendChat]             = useState('');     // tracks which friend chat should be opened
-  const [activeFriendChatData, _setActiveFriendChatData]    = useState(null);
-  const activeFriendChatDataRef                             = useRef(activeFriendChatData);
+  const [activeFriendChat, setActiveFriendChat]             = useState('');                 // tracks which friend chat should be opened
+  const [activeFriendChatData, _setActiveFriendChatData]    = useState(null);               // holds the active friend chat thread's data, include messages, friend id, chatthread id...
+  const activeFriendChatDataRef                             = useRef(activeFriendChatData); // reference hook for active friend chat data. useful for passing into event handlers
   const setActiveFriendChatData = (data) => {
     activeFriendChatDataRef.current = data;
     _setActiveFriendChatData(data);
   };
-  const [chatList, _setChatList]                            = useState([]);     // keeps track of chat thread id, mesages in a direct messaging chat between friends
-  const chatListRef                                         = useRef(chatList);
+  const [chatList, _setChatList]                            = useState([]);                 // keeps track of chat thread id, mesages in a direct messaging chat between friends
+  const chatListRef                                         = useRef(chatList);             // reference hook for chat thread list. useful for passing chat thread list into event handlers
   const setChatList = (data) => {
     chatListRef.current = data;
     _setChatList(data);
   };
-  const [friendMessageBuffer, setFriendMessageBuffer]       = useState({});
-  const [socket, setSocket]                                 = useState(null);
+  const [friendMessageBuffer, setFriendMessageBuffer]       = useState({});                 // table that is used to hold buffers for messages for each friend
+  const [socket, setSocket]                                 = useState(null);               // socket for the user to communicate immediate changes to other users subscribed to their content
+  const [editingMessage, setEditingMessage]                 = useState(null);               // 
   // effect that adds an event listener to each form in the app
   // useEffect(() => {
   //   const forms = document.querySelectorAll('.needs-validation');
@@ -62,7 +54,7 @@ function App() {
     // responsible for socket connection. dependent on user object
     user 
       ? socket === null && connectSocket()
-      : socket && disconnectSocket(null);
+      : socket && disconnectSocket();
   }, [user]);
 
   // the function connects user client to the server via socket
@@ -88,8 +80,7 @@ function App() {
     const loggedInUser = window.localStorage.getItem('loggedInUser');
     if (loggedInUser) {
       const user = JSON.parse(loggedInUser);
-      setUser(user);
-      contentService.setToken(user.token);
+      setUserData(user);
     }
   }, []);
 
@@ -174,71 +165,12 @@ function App() {
   useEffect(() => {
     chatList.length > 0 && setActiveFriendChatData(chatList.find(chat => chat.friend === activeFriendChat));
   }, [chatList]);
-  
-  const validateForm = (event) => {
-    event.preventDefault();
-    // if a field is not '', check that it has valid data
-    // ensure username is long enough and is of valid chars
-    // check that password is long enough
-    // check that email is valid
-    // check that full name is valid as well.
-    loginSignupToggle 
-      ? login(usernameField, passwordField, emailField) 
-      : signup(usernameField, fullNameField, emailField, passwordField, confirmPasswordField);
+
+  const setUserData = (userData) => {
+    contentService.setToken(userData.token);
+    setUser(userData);
   };
 
-  const login = async (username, password, email = null) => {
-    // check login fields
-    const userObj = {
-      password
-    }
-    username.length > 0
-      ? userObj.username = username
-      : userObj.email = email;
-    try {
-      const user = await loginService.login(userObj.username ? 'username' : 'email', userObj);
-      window.localStorage.setItem('loggedInUser', JSON.stringify(user));
-      contentService.setToken(user.token);
-      clearAllFormFields();
-      setUser(user);
-    } catch (error) {
-      setErrorMessage(`Login failed: ${error.response.data.error}`);
-      setTimeout(() => {
-        clearErrorMessage();
-      }, 10000);
-      clearAllFormFields();
-    }
-  };
-
-  const signup = async (username, name, email, password, confirmPassword) => {
-    if (password !== confirmPassword) {
-      setErrorMessage('Sign up failed: Passwords do not match');
-      setTimeout(() => setErrorMessage(''), 10000);
-      clearAllFormFields();
-      return;
-    }
-    const userObj = {
-      username,
-      name,
-      email,
-      password,
-      confirmPassword
-    };
-
-    try {
-      const newUser = await signupService.signup(userObj);
-      if (newUser && newUser.username === username) {
-        login(newUser.username, passwordField);
-      }
-    } catch(error) {
-      setErrorMessage(`Signup Failed: ${error.response.data.error}`);
-      setTimeout(() => {
-        clearErrorMessage();
-      }, 10000);
-      clearAllFormFields();
-    }
-  };
-  
   // clear all data out when logging out
   const logout = () => {
     window.localStorage.clear();
@@ -252,66 +184,8 @@ function App() {
     setUser(null);
   };
 
-  const captureUsernameInput = (event) => {
-    setUsernameField(event.target.value);
-  };
-
-  const captureFullNameInput = (event) => {
-    setFullNameField(event.target.value);
-  };
-
-  const captureEmailInput = (event) => {
-    setEmailField(event.target.value);
-  };
-
-  const capturePasswordInput = (event) => {
-    setPasswordField(event.target.value);
-  };
-
-  const captureConfirmPasswordInput = (event) => {
-    setConfirmPasswordField(event.target.value);
-  };
-
-  const toggleUserForm = () => {
-    clearAllFormFields();
-    setLoginSignupToggle(loginSignupToggle ? false : true);
-  };
-
-  const toggleUserEmailFields = () => {
-    const userContainer = document.getElementById('user-field-containter');
-    const emailContainer = document.getElementById('email-field-containter');
-    
-    userContainer.classList.toggle('d-grid');
-    userContainer.classList.toggle('d-none');
-    if (userContainer.querySelector('input').hasAttribute('required')) {
-      userContainer.querySelector('input').removeAttribute('required');
-      userContainer.querySelector('input').value = '';
-      setUsernameField('');
-    } else {
-      userContainer.querySelector('input').setAttribute('required', '');
-    }
-
-    emailContainer.classList.toggle('d-grid');
-    emailContainer.classList.toggle('d-none');
-    if (emailContainer.querySelector('input').hasAttribute('required')) {
-      emailContainer.querySelector('input').removeAttribute('required');
-      emailContainer.querySelector('input').value = '';
-      setEmailField('');
-    } else {
-      emailContainer.querySelector('input').setAttribute('required', '');
-    }
-  };
-
   const clearErrorMessage = () => {
     setErrorMessage('');
-  };
-
-  const clearAllFormFields = () => {
-    setFullNameField('');
-    setUsernameField('');
-    setEmailField('');
-    setPasswordField('');
-    setConfirmPasswordField('');
   };
 
   const openChat = (username) => {
@@ -363,36 +237,35 @@ function App() {
   
   };
 
+  const toggleMessageEdit = (messageId) => {
+    console.log('message edit');
+    // setEditingMessage(messageId);
+  };
+
+  const replyToMessage = (messageId) => {
+    console.log('reply to message');
+  };
+
+  const deleteMessage = (messageId) => {
+    console.log('delete message');
+  };
+
+  const saveMessageEdit = () => {
+    // when confirming save message by edit,
+    /*
+      update chatlist.message
+    */
+  };
+
+  const cancelMessageEdit = () => {
+    setEditingMessage(null);
+  };
+
   // this returns the appropriate React component for corresponding user form
   const userForm = () => (
     <>
       <div className="w-100 d-flex justify-content-center align-items-center" id="app-container" style={{ backgroundColor: '#ebedf0', height: '85%' }}>
-        {loginSignupToggle 
-        ? <Login 
-            submitForm={validateForm} 
-            toggleUserForm={toggleUserForm}
-            toggleUserEmailFields={toggleUserEmailFields}
-            usernameInputHandler={captureUsernameInput}
-            emailInputHandler={captureEmailInput}
-            passwordInputHandler={capturePasswordInput}
-            usernameField={usernameField}
-            emailField={emailField}
-            passwordField={passwordField}
-          /> 
-        : <Signup 
-            submitForm={validateForm}
-            toggleUserForm={toggleUserForm}
-            usernameInputHandler={captureUsernameInput}
-            fullNameInputHandler={captureFullNameInput}
-            emailInputHandler={captureEmailInput}
-            passwordInputHandler={capturePasswordInput}
-            confirmPasswordInputHandler={captureConfirmPasswordInput}
-            usernameField={usernameField}
-            fullNameField={fullNameField}
-            emailField={emailField}
-            passwordField={passwordField}
-            confirmPasswordField={confirmPasswordField}
-          />}
+        <Signup setUserData={setUserData}/>
       </div>
       <div className="bg-white w-100 " style={{ height: '15%' }}>
           <p className='mx-5 text-secondary fs-6'>Social Media Project © 2020</p>
@@ -412,7 +285,13 @@ function App() {
               messageBuffer={friendMessageBuffer[activeFriendChatData.friend]}
               captureFriendMessageInput={captureFriendMessageInput}
               submitMessage={submitFriendChatMessage}
-              checkForSubmitKey={checkForSubmitKey}/> 
+              checkForSubmitKey={checkForSubmitKey}
+              editingMessage={editingMessage}
+              toggleMessageEdit={toggleMessageEdit}
+              replyToMessage={replyToMessage}
+              deleteMessage={deleteMessage}
+              saveMessageEdit={saveMessageEdit}
+              cancelMessageEdit={cancelMessageEdit}/> 
             : null}
         </FeedArea>
       </Home>
