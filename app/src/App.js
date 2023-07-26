@@ -12,11 +12,13 @@ import { FeedArea, FriendChat } from './components/FeedArea';
 function App() {
   const [errorMessage, setErrorMessage]                     = useState('');
   const [user, setUser]                                     = useState(null);
+  
   const [friendList, setFriendList]                         = useState([]);
   const isFriendListRetrieved                               = useRef(false);                // flag to check if friends' list has been retrieved from server
   const setIsFriendListRetrieved = (value) => {
     isFriendListRetrieved.current = value;
   };
+
   const [activeFriendChat, setActiveFriendChat]             = useState('');                 // tracks which friend chat should be opened
   const [activeFriendChatData, _setActiveFriendChatData]    = useState(null);               // holds the active friend chat thread's data, include messages, friend id, chatthread id...
   const activeFriendChatDataRef                             = useRef(activeFriendChatData); // reference hook for active friend chat data. useful for passing into event handlers
@@ -24,15 +26,17 @@ function App() {
     activeFriendChatDataRef.current = data;
     _setActiveFriendChatData(data);
   };
+
   const [chatList, _setChatList]                            = useState([]);                 // keeps track of chat thread id, mesages in a direct messaging chat between friends
   const chatListRef                                         = useRef(chatList);             // reference hook for chat thread list. useful for passing chat thread list into event handlers
   const setChatList = (data) => {
     chatListRef.current = data;
     _setChatList(data);
   };
+
   const [friendMessageBuffer, setFriendMessageBuffer]       = useState({});                 // table that is used to hold buffers for messages for each friend
   const [socket, setSocket]                                 = useState(null);               // socket for the user to communicate immediate changes to other users subscribed to their content
-  const [editingMessage, setEditingMessage]                 = useState(null);               // 
+  const [editingMessage, setEditingMessage]                 = useState(null);
   // effect that adds an event listener to each form in the app
   // useEffect(() => {
   //   const forms = document.querySelectorAll('.needs-validation');
@@ -280,18 +284,20 @@ function App() {
         <FriendList key="FriendList" friendList={friendList} openChat={openChat}></FriendList>
         <FeedArea key="FeedArea">
           { activeFriendChatData 
-            ? <FriendChat friendChatData={activeFriendChatData}
-              friendProfilePicture={friendList.find(friend => friend.username === activeFriendChatData.friend).image_name}
-              messageBuffer={friendMessageBuffer[activeFriendChatData.friend]}
-              captureFriendMessageInput={captureFriendMessageInput}
-              submitMessage={submitFriendChatMessage}
-              checkForSubmitKey={checkForSubmitKey}
-              editingMessage={editingMessage}
-              toggleMessageEdit={toggleMessageEdit}
-              replyToMessage={replyToMessage}
-              deleteMessage={deleteMessage}
-              saveMessageEdit={saveMessageEdit}
-              cancelMessageEdit={cancelMessageEdit}/> 
+            ? <FriendChat 
+                friendChatData={activeFriendChatData}
+                friendProfilePicture={friendList.find(friend => friend.username === activeFriendChatData.friend).image_name}
+                messageBuffer={friendMessageBuffer[activeFriendChatData.friend]}
+                captureFriendMessageInput={captureFriendMessageInput}
+                submitMessage={submitFriendChatMessage}
+                checkForSubmitKey={checkForSubmitKey}
+                editingMessage={editingMessage}
+                toggleMessageEdit={toggleMessageEdit}
+                replyToMessage={replyToMessage}
+                deleteMessage={deleteMessage}
+                saveMessageEdit={saveMessageEdit}
+                cancelMessageEdit={cancelMessageEdit}
+              /> 
             : null}
         </FeedArea>
       </Home>
