@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import loginService from '../../services/loginService';
 import signupService from '../../services/signupService';
+import { UserContext } from "../../contexts/user.context";
+import { ErrorMessageContext } from "../../contexts/error-message.context";
+
+import "./sign-up-form.styles.scss";
 
 const defaultFormFields = {
     username: '', 
@@ -11,12 +15,15 @@ const defaultFormFields = {
     confirmPassword: ''
 };
 
-const Signup = ({ setUserData }) => {
+const Signup = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { username, fullName, email, password, confirmPassword } = formFields;
     const [loginSignupToggle, setLoginSignupToggle] = useState(false);
     const [toggleUserEmailFields, setToggleUserEmailFields] = useState(true);
-    const [errorMessage, setErrorMessage] = useState('');
+
+    // create a user context hook and save signup/login user data there
+    const {setUserData} = useContext(UserContext);
+    const { setErrorMessage } = useContext(ErrorMessageContext);
 
 
     const formSignUpHeader = {
@@ -71,7 +78,6 @@ const Signup = ({ setUserData }) => {
           : userObj.email = email;
         try {
           const user = await loginService.login(userObj.username ? 'username' : 'email', userObj);
-          window.localStorage.setItem('loggedInUser', JSON.stringify(user));
           clearAllFormFields();
           setUserData(user);
         } catch (error) {
@@ -125,74 +131,65 @@ const Signup = ({ setUserData }) => {
 
     // inner component: not best practices, but IT JUST WORKS
     const Login = () => {
-        const loginButtonStyle = {
-            backgroundImage: 'linear-gradient(to right, rgb(167, 169, 173), rgb(79, 83, 83))',
-            fontSize: '14pt',
-            border: 'none',
-            cursor: 'pointer',
-            outline: 'none',
-        }
-    
-        const inputStyling = { 
-            color: '#495057', 
-            border: '1px solid #ced4da', 
-            outline: 'none' 
-        };
-    
-        const formStyling = { 
-            width: '400px', 
-            userSelect: 'none', 
-            boxShadow: '0 .5rem 1rem rgba(0,0,0,.15)', 
-            fontFamily: 'Helvetica Neue, sans-serif' 
-        };
-    
         const changeUserEmailField = () => {
             setToggleUserEmailFields(!toggleUserEmailFields);
         };
 
         return (
-            <div className="d-flex flex-column justify-content-center align-items-center">
-                <h1 className='display-5 pb-2' style={{ fontFamily: "YellowTail, cursive" }}>Social Media Project</h1>
-                <form className='bg-white rounded border d-grid py-3 px-4 needs-validation' style={formStyling} onSubmit={validateForm}>
-                    <div className='d-flex flex-column'>
-                        <div className='d-flex justify-content-center px-1 mt-2 mb-3'>
-                            <h5 className='fw-normal m-0'>Log Into Your Account</h5>
+            <div className="login-form-container">
+                <h1>Social Media Project</h1>
+                <form className='needs-validation' onSubmit={validateForm}>
+                    <div className='form-container'>
+                        <div className='form-header'>
+                            <h5>Log Into Your Account</h5>
                         </div>
-                        {
-                            toggleUserEmailFields ?
-                            <div className='d-grid px-2 mb-3' id="user-field-containter">
-                                <label htmlFor="username" className='mb-2'><strong>Username</strong></label>
-                                <input name="username" className='py-2 px-3 rounded login-input-field' style={inputStyling} value={username} onChange={handleChange} placeholder='Enter username' required/>
-                                <div className="valid-feedback">Looks good.</div>
-                                <div className="invalid-feedback">Please double check username field.</div>
-                            </div>
-                            :
-                            <div className="d-grid px-2 mb-3" id="email-field-containter">
-                                <label htmlFor="email" className="mb-2"><strong>Email</strong></label>
-                                <input name="email" type="email" className="py-2 px-3 rounded login-input-field" style={inputStyling} value={email} onChange={handleChange} placeholder='Enter email'/>
-                                <div className="valid-feedback">Looks good.</div>
-                                <div className="invalid-feedback">Please double check email field</div>
-                            </div>
-                        }
+                        <div className='username-field-container'>
+                            <label htmlFor={`${toggleUserEmailFields ? 'username' : 'email'}`}>
+                                <strong>{toggleUserEmailFields ? 'Username' : 'Email'}</strong>
+                            </label>
+                            <input type={`${toggleUserEmailFields ? 'text' : 'email'}`} 
+                                name={`${toggleUserEmailFields ? 'username' : 'email'}`} 
+                                value={`${toggleUserEmailFields ? username : email}`} 
+                                onChange={handleChange} 
+                                placeholder={`${toggleUserEmailFields ? 'Enter username' : 'Enter email'}`} 
+                                required/>
+                            <div className="valid-feedback">Looks good!</div>
+                            <div className="invalid-feedback">Please double check {toggleUserEmailFields ? 'username' : 'email'} field.</div>
+                        </div>
                         {/* toggle user/email checkbox */}
-                        <div className="d-flex px-2 mb-3">
-                            <input className="form-check-input me-1" type="checkbox" value="" id="flexCheckDefault" onChange={changeUserEmailField}/>
-                            <label className="form-check-label fw-lighter text-secondary" htmlFor="flexCheckDefault">Use email?</label>
+                        <div className="toggle-container">
+                            <input type="checkbox" value="" id="flexCheckDefault" onChange={changeUserEmailField}/>
+                            <label className="fw-lighter text-secondary" htmlFor="flexCheckDefault">Use email?</label>
                         </div>
                         {/* password field */}
-                        <div className='d-grid px-2 mb-3'>
-                            <label htmlFor="password" className='mb-2'><strong>Password</strong></label>
-                            <input name="password" type='password' className='py-2 px-3 rounded login-input-field' style={inputStyling} value={password} onChange={handleChange} placeholder='Enter password' required/>
-                            <div className="valid-feedback">Looks good.</div>
-                            <div className="invalid-feedback">Please double check the password field.</div>
+                        <div className='password-container'>
+                            <label htmlFor="password">
+                                <strong>Password</strong>
+                            </label>
+                            <input name="password" 
+                                type='password' 
+                                className='py-2 px-3 rounded login-input-field' 
+                                value={password} 
+                                onChange={handleChange} 
+                                placeholder='Enter password' 
+                                required/>
+                            {
+                                password.length > 0 && <div className="valid-feedback">Looks good!</div>
+                            }
+                            {
+                                password.length > 0 && <div className="invalid-feedback">Please double check the password field.</div>
+                            }
                         </div>
-                        <div className='d-grid px-2 my-3'>
-                            <button className='rounded text-white login-input-button m-0 py-1 px-3' style={loginButtonStyle} type='submit'><strong>Log In</strong></button>
+                        <div className='button-container'>
+                            <button type='submit'>
+                                <strong>Log In</strong>
+                            </button>
                         </div>
-                        <div className='d-flex justify-content-center px-1 mb-2'>
-                            <span onClick={toggleUserForm} className='text-decoration-none'
-                                style={{ color: '#007bff', fontSize: '10pt', cursor: 'pointer' }}
-                            >Don't have an account? Sign up here.</span>
+                        <div className='sign-up-link-container'>
+                            <span onClick={toggleUserForm} 
+                                className='text-decoration-none'>
+                                    Don't have an account? Sign up here.
+                            </span>
                         </div>
                     </div>
                 </form>

@@ -1,0 +1,53 @@
+.chat-message-container {
+    position: relative; // this container needs to have relative position for any submenus it will contain
+    display: flex;
+    user-select: none;
+    width: 95%;
+    padding: .5rem;
+    margin: auto;
+    
+    img {
+        width: 16%;
+        margin-left: auto;
+        height: 3.5rem;
+        width: 3.5rem;
+        border-radius: 50%;
+    }
+
+    .main-container {
+        width: 84%;
+        margin: 0 auto;
+        padding-left: .5rem;
+
+        .text-container {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            color: white;
+            opacity: .5;
+            font-weight: bold;
+            font-size: 1rem;
+
+            .username-container {
+                color: var(--username-blue);
+                margin: 0 .25rem;
+                cursor: pointer;
+            }
+
+            .time-container {
+                font-weight: normal;
+            }
+        }
+
+        .message-body-container {
+            width: 100%;
+            min-width: 100%;
+            color: white;
+            opacity: .8;
+        }
+    }
+}
+
+.chat-message-container:hover {
+    background-color: var(--light-hover);
+}

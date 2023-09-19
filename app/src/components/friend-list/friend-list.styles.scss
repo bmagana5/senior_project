@@ -1,0 +1,11 @@
+.friend-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    height: 92%;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

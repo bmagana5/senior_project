@@ -1,0 +1,71 @@
+.message-button-container {
+    position: absolute;
+    display: flex;
+    top: 0;
+    right: 0;
+    height: 50%;
+    width: 30%;
+    .reaction-dropdown-container {
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        .dropdown-button {
+            .tooltip-text {
+                position: absolute;
+                display: none;
+            }
+            i {
+                display: none;
+            }
+        }
+        
+        .dropdown {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            button {
+
+            }
+        }
+    }
+
+    .edit-button {
+        width: 33%;
+
+        .button-text {
+        }
+        
+        i {
+            
+        }
+    }
+    
+    .more-options-container {
+        width: 33%;
+
+        .dropdown-button {
+            .button-text {
+                
+            }
+            
+            i {
+                
+            }
+        }
+        
+        .dropdown {
+            display: none;
+            .dropdown-button {
+                i {
+
+                }
+            }
+
+            .dropdown-button-danger {
+                i {
+
+                }
+            }
+        }
+    }
+}

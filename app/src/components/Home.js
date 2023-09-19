@@ -6,26 +6,7 @@ const Home = ({ logout, ...props }) => {
         backgroundColor: 'var(--dark)',
         boxSizing: 'border-box'
     };
-
-    const friendListBar = {
-        backgroundColor: 'var(--medium)',
-        color: 'gray',
-        borderRightStyle: 'groove',
-        borderRightWidth: '1px',
-        borderColor: 'var(--dark)',
-        borderSizing: 'border-box',
-        userSelect: 'none',
-        overflow: 'hidden'
-    };
-
-    const friendFilterInput = {
-        borderRadius: '.25rem',
-        borderStyle: 'none',
-        outline: 'none',
-        color: 'lightgray',
-        opacity: 0.8
-    };
-
+    
     const contentFeed = {
         backgroundColor: 'var(--light)',
     };
@@ -57,12 +38,12 @@ const Home = ({ logout, ...props }) => {
             {/* Group column */}
             <div className="col-1 h-100" style={thinBarLeft}></div>
             {/* Friend List column */}
-            <div className="col-2 h-100 py-3" style={friendListBar} id="friend-list-bar">
+            {/* <div className="col-2 h-100 py-3" style={friendListBar} id="friend-list-bar">
                 <div className="h-100 w-100 px-2 d-flex flex-column">
                     <input className="mb-2 p-2 w-100" style={friendFilterInput} type="text" id="friend-filter-input" onKeyUp={null} placeholder="Filter friends..."/>
                     {props.children.find(prop => prop.key === 'FriendList')}
                 </div>
-            </div>
+            </div> */}
             <div className="col-9 d-flex flex-column h-100" style={contentFeed}>
                 {/* Navbar row */}
                 <div className="d-flex align-items-center w-100" style={navBar}>

@@ -1,0 +1,41 @@
+.friend-item-container {
+    display: flex;
+    align-items: center;
+    width: 95%;
+    margin-bottom: .5rem;
+    padding: .5rem .25rem;
+    cursor: pointer;
+    
+    img {
+        margin-right: 8px;
+        height: 2.5rem;
+        width: 2.5rem;
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+        border-radius: 50%;
+    }
+
+    .name-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+
+        div {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+}
+
+.friend-item-container:hover {
+    transform: translateX(4px);
+    transition: transform 0.15s;
+    background-color: var(--light-hover);
+}
+
+.friend-item-container:active {
+    transform: translateX(4px) translateY(2px);
+    background-color: var(--medium-active);
+}

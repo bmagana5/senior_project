@@ -1,0 +1,40 @@
+.friend-list-bar-container {
+    width: 18%;
+    height: 100%;
+    color: gray;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--medium);
+    border-right-style: groove;
+    border-right-width: 1px;
+    border-color: var(--dark);
+    box-sizing: border-box;
+    user-select: none;
+    overflow: hidden;
+
+    .friend-filter-container {
+        height: 8%;
+        width: 95%;
+        margin: auto;
+        padding: .25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .filter-input {
+            width: 95%;
+            margin: auto;
+            padding: 8px;
+            border-radius: .25rem;
+            border-style: none;
+            outline: none;
+            color: lightgray;
+            opacity: 0.8;
+            background-color: var(--dark);
+            &:focus {
+                background-color: var(--dark-active);
+            }
+        }
+    }
+}

@@ -1,0 +1,164 @@
+.login-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+        font-size: 3rem;
+        font-weight: 300;
+        font-family: "Yellowtail";
+        padding: .5rem;
+    }
+
+    form {
+        display: grid;
+        width: 25rem;
+        padding: 1rem 2rem;
+        background-color: white;
+        border: 1px solid rgba(128, 128, 128, .3);
+        border-radius: .5rem;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+        user-select: none;
+        font-family: "Helvetica Neue" sans-serif;
+    
+        .form-container {
+            display: flex;
+            flex-direction: column;
+
+            .form-header {
+                display: flex;
+                justify-content: center;
+                padding: 0 .25rem;
+                margin-top: .5rem;
+                margin-bottom: 1rem;
+                h5 {
+                    margin: 0;
+                    font-size: 1.25rem;
+                    font-weight: normal;
+                }
+
+            }
+
+            .username-field-container {
+                display: grid;
+                padding: 0 .5rem;
+                margin-bottom: 1rem;
+
+                label {
+                    margin-bottom: .5rem;
+                }
+
+                input[type=email], input[type=text] {
+                    padding: .5rem 1rem;
+                    color: #495057;
+                    outline: none;
+                    border: 1px solid #ced4da;
+                    border-radius: .25rem;
+                }
+
+                input:focus {
+                    box-shadow: .2em -.1em gray;
+                }
+
+                input:hover {
+                    opacity: .75;
+                }
+
+                input:active {
+                    opacity: .85;
+                }
+
+                .valid-feedback {
+                    color: green;
+                }
+    
+                .invalid-feedback {
+                    color: red;
+                }
+            }
+
+            .toggle-container {
+                display: flex;
+                padding: 0 .5rem;
+                margin-bottom: 1rem;
+
+                input[type=checkbox] {
+                    margin-right: .25rem;
+                }
+
+                label {
+                    color: rgba(0, 0, 0, .7);
+                }
+            }
+
+            .password-container {
+                display: grid;
+                padding: 0 .5rem;
+                margin-bottom: 1rem;
+
+                label {
+                    margin-bottom: .5rem;
+                }
+
+                input[type=password] {
+                    padding: .5rem 1rem;
+                    color: #495057;
+                    outline: none;
+                    border: 1px solid #ced4da;
+                    border-radius: .25rem;
+                }
+
+                input:focus {
+                    box-shadow: .2em -.1em gray;
+                }
+
+                input:hover {
+                    opacity: .75;
+                }
+
+                input:active {
+                    opacity: .85;
+                }
+
+                .valid-feedback {
+                    color: green;
+                }
+
+                .invalid-feedback {
+                    color: red;
+                }
+            }
+        
+            .button-container {
+                display: grid;
+                padding: 0 .5rem;
+                margin: 1rem 0;
+
+                button {
+                    margin: 0;
+                    padding: .25rem 1rem;
+                    border: none;
+                    border-radius: .5rem;
+                    outline: none;
+                    background-image: linear-gradient(to right, rgb(167, 169, 173), rgb(79, 83, 83));
+                    color: white;
+                    font-size: 1.25rem;
+                }
+            }
+
+            .sign-up-link-container {
+                display: flex;
+                justify-content: center;
+                padding: 0 .25rem;
+                margin-bottom: .5rem;
+                
+                span {
+                    color: #007bff;
+                    font-size: .9rem;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
